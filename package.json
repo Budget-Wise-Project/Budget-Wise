@@ -1,0 +1,27 @@
+{
+  "name": "budget-wise",
+  "version": "1.0.0",
+  "description": "Budget Tracker a simple budgeting app for tracking expenses and viewing spending summaries.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "module": "node --trace-warnings",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Budget-Wise-Project/Budget-Wise"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Budget-Wise-Project/Budget-Wise/issues"
+  },
+  "homepage": "https://github.com/Budget-Wise-Project/Budget-Wise#readme",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "express": "^5.1.0",
+    "express-handlebars": "^8.0.3"
+  }
+}

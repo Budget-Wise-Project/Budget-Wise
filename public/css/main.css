@@ -1,0 +1,49 @@
+/* Make the whole page a flex container */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header stays at the top */
+header {
+  flex-shrink: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.logo-img {
+  width: 250px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Main content grows to fill space */
+main.homepage {
+  flex: 1; /* pushes footer down */
+  max-width: 900px;
+  margin: 8rem auto 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Footer pinned at bottom */
+.site-footer {
+  flex-shrink: 0;
+  padding: 1rem;
+  background-color: #2e7d32;
+  color: #fff;
+  text-align: center;
+}
