@@ -35,19 +35,19 @@ BudgetWise is a full-stack budgeting app that lets users record expenses, organi
 
 	The server runs by default on port `3000`. Open `http://localhost:3000` in a browser.
 
-**Notes & Configuration**
-
-- Views use `express-handlebars` and layouts are in `views/layouts`.
-- Static assets are served from the `public/` folder (mounted at `/public`).
-- If your app requires environment variables (e.g., database URLs, session secrets), create a `.env` file and load them before starting the server. Example variables are not required for the basic local run described above.
-
 **Development & Contribution**
 
-- To make changes, create a feature branch, then open a pull request.
-- If you'd like, I can commit this README update for you. Run the commands below to commit locally:
+- To make changes, create a feature branch and open a pull request (PR) when your changes are ready for review.
+- Commit locally with a clear, descriptive message and push your branch to the remote repository:
 
 ```bash
-git add README.md
-git commit -m "Update README with project description and run instructions"
-git push origin main
+# stage your changes
+git add <files>
+# commit with a short, descriptive message
+git commit -m "Short, descriptive message about your change"
+# push the branch (replace <branch-name> with your branch)
+git push origin <branch-name>
 ```
+
+- Open a PR from your branch and request reviews. Follow project guidelines for reviews and merging.
+ 
