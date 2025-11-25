@@ -1,0 +1,73 @@
+<main class="history-page">
+  <section class="history-header">
+    <h1>Bill history</h1>
+    <p>Search past bills by month, status, provider, account number, or tags.</p>
+  </section>
+
+  {{#if error}}
+    <p class="error-message">{{error}}</p>
+  {{/if}}
+
+  <section class="history-filters">
+    <form method="GET" action="/history" class="history-filter-form">
+      <div class="form-row">
+        <label for="month">Month</label>
+        <input id="month" name="month" type="month" value="{{filters.month}}" />
+      </div>
+
+      <div class="form-row">
+        <label for="status">Status</label>
+        <select id="status" name="status">
+          <option value="">All</option>
+          <option value="paid">Paid</option>
+          <option value="due">Due</option>
+          <option value="upcoming">Upcoming</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label for="search">Search</label>
+        <input
+          id="search"
+          name="search"
+          type="text"
+          placeholder="Provider, account #, tags"
+          value="{{filters.search}}"
+        />
+      </div>
+
+      <button type="submit" class="primary-button">Apply filters</button>
+    </form>
+  </section>
+
+  <section class="history-results">
+    {{#if bills.length}}
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Due date</th>
+            <th>Provider</th>
+            <th>Account #</th>
+            <th>Status</th>
+            <th>Amount</th>
+            <th>Notes / tags</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each bills}}
+            <tr>
+              <td>{{formatDate this.dueDate}}</td>
+              <td>{{this.utility.provider}}</td>
+              <td>{{this.utility.accountNumber}}</td>
+              <td>{{this.status}}</td>
+              <td>${{formatMoney this.amount}}</td>
+              <td>{{this.notes}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <p>No bills found for the selected filters.</p>
+    {{/if}}
+  </section>
+</main>

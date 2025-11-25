@@ -21,8 +21,10 @@
   "homepage": "https://github.com/Budget-Wise-Project/Budget-Wise#readme",
   "dependencies": {
     "axios": "^1.13.2",
+    "bcrypt": "^6.0.0",
     "express": "^5.1.0",
     "express-handlebars": "^8.0.3",
+    "express-session": "^1.18.2",
     "mongodb": "^7.0.0"
   }
 }

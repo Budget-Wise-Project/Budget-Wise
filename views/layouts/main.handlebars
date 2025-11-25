@@ -11,6 +11,18 @@
     <div class="logo-placeholder">
       <img src="/public/images/BudgetWiseLogo.png" alt="BudgetWise Logo" class="logo-img" />
     </div>
+    <nav class="main-nav">
+      <a href="/">Home</a>
+      {{#if user}}
+        <a href="/history">History</a>
+        <form method="POST" action="/logout" class="logout-form">
+          <button type="submit">Log out</button>
+        </form>
+      {{else}}
+        <a href="/login">Log in</a>
+        <a href="/signup">Sign up</a>
+      {{/if}}
+    </nav>
   </header>
 
   {{{body}}}

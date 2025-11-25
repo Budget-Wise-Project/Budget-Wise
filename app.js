@@ -1,14 +1,17 @@
+// app.js
 import express from "express";
 import exphbs from "express-handlebars";
-import routes from "./routes/index.js";
+import session from "express-session";
+
+import budgetRoutes from "./routes/budgetRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import historyRoutes from "./routes/historyRoutes.js";
 
 const app = express();
 const PORT = 3000;
 
+// Support PUT/DELETE via _method if you need it
 const rewriteUnsupportedBrowserMethods = (req, res, next) => {
-  // If the user posts to the server with a property called _method, rewrite the request's method
-  // To be that method; so if they post _method=PUT you can now allow browsers to POST to a route that gets
-  // rewritten in this middleware to a PUT route
   if (req.body && req.body._method) {
     req.method = req.body._method;
     delete req.body._method;
@@ -16,17 +19,52 @@ const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   next();
 };
 
-app.use('/public', express.static('public'));
+app.use("/public", express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(rewriteUnsupportedBrowserMethods);
 
-app.engine('handlebars', exphbs.engine({defaultLayout: "main"}));
-app.set('view engine', 'handlebars');
+app.use(
+  session({
+    name: "BudgetWiseSession",
+    secret: "super-secret-string-change-me",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+    },
+  })
+);
 
-app.use("/", routes);
+// expose logged-in user to all templates
+app.use((req, res, next) => {
+  res.locals.user = req.session.user;
+  next();
+});
+
+app.engine(
+  "handlebars",
+  exphbs.engine({
+    defaultLayout: "main",
+    helpers: {
+      formatDate: (date) => {
+        if (!date) return "";
+        return new Date(date).toLocaleDateString("en-US");
+      },
+      formatMoney: (amount) => {
+        if (amount === undefined || amount === null || isNaN(amount)) return "";
+        return Number(amount).toFixed(2);
+      },
+    },
+  })
+);
+app.set("view engine", "handlebars");
+
+// ROUTES
+app.use("/", budgetRoutes);  // home page
+app.use("/", authRoutes);    // /login, /signup, /logout
+app.use("/", historyRoutes); // /history
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
-
