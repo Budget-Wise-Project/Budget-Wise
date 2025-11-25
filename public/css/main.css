@@ -1,13 +1,21 @@
-/* Make the whole page a flex container */
+/* Global box-sizing so padding doesn't push things past 100% width */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body {
   height: 100%;
   margin: 0;
   display: flex;
   flex-direction: column;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
-/* Header stays at the top */
+
 header {
   flex-shrink: 0;
   position: fixed;
@@ -28,9 +36,46 @@ header {
   object-fit: contain;
 }
 
-/* Main content grows to fill space (home page) */
+
+.main-nav {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #1b5e20;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.main-nav a:hover {
+  text-decoration: underline;
+}
+
+.logout-form {
+  margin: 0;
+}
+
+.logout-form button {
+  border: none;
+  background: #c62828;
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.logout-form button:hover {
+  background: #b71c1c;
+}
+
+
 main.homepage {
-  flex: 1; /* pushes footer down */
+  flex: 1; 
   max-width: 900px;
   margin: 8rem auto 2rem auto;
   padding: 2rem;
@@ -39,7 +84,7 @@ main.homepage {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* Footer pinned at bottom */
+
 .site-footer {
   flex-shrink: 0;
   padding: 1rem;
@@ -51,11 +96,11 @@ main.homepage {
 /* ===== Auth pages: login / signup ===== */
 
 main.auth-page {
-  flex: 1; /* push footer to bottom */
+  flex: 1; 
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 6rem;      /* leave space for fixed header */
+  margin-top: 6rem;      
   margin-bottom: 2rem;
   padding: 2rem 1rem;
 }
@@ -153,3 +198,100 @@ main.auth-page {
   text-decoration: underline;
 }
 
+/* ===== History page (bill history) ===== */
+
+main.history-page {
+  flex: 1; 
+  max-width: 1000px;
+  margin: 8rem auto 2rem auto;  
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Header text */
+
+.history-header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.6rem;
+  color: #1b5e20;
+}
+
+.history-header p {
+  margin: 0 0 1.5rem 0;
+  font-size: 0.95rem;
+  color: #455a64;
+}
+
+/* Filter form */
+
+.history-filters {
+  margin-bottom: 1.5rem;
+}
+
+.history-filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: flex-end;
+}
+
+.history-filter-form .form-row {
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+}
+
+.history-filter-form label {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.history-filter-form input,
+.history-filter-form select {
+  padding: 0.45rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid #cfd8dc;
+  font-size: 0.9rem;
+}
+
+.history-filter-form input:focus,
+.history-filter-form select:focus {
+  outline: none;
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.15);
+}
+
+/* Results table */
+
+.history-results {
+  margin-top: 0.5rem;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.history-table th,
+.history-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #eceff1;
+  text-align: left;
+}
+
+.history-table thead th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+.history-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.history-table tbody tr:hover {
+  background-color: #f1f8e9;
+}
