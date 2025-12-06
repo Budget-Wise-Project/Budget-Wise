@@ -83,7 +83,8 @@ router.post('/delete', ensureLoggedIn, async (req, res) => {
     const { budgetId } = req.body;
 
     try {
-        const success = await budgetData.deleteBudget(budgetId);
+        const success = await budgetData.deleteBudgetById(budgetId);
+            budgetId = validateId(budgetId, 'budgetId');
 
         if (!success) {
             return res.redirect(

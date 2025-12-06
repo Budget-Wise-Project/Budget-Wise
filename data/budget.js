@@ -142,7 +142,7 @@ export const calculateBudgetSummary = async (budgetDocument) => {
     };
 } ;
 //DELETE a user's budget
-export const deleteBudget = async (budgetId) => {
+export const deleteBudgetById = async (budgetId) => {
     budgetId = validateId(budgetId, 'budgetId');
 
     const budgetsCollection = await budgets();

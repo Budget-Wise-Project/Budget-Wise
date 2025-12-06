@@ -7,6 +7,7 @@ import budgetRoutes from "./routes/budgetRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import historyRoutes from "./routes/historyRoutes.js";
 import budgetFeatureRoutes from './routes/budgets.js';
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 
 const app = express();
 const PORT = 3000;
@@ -66,6 +67,14 @@ app.use("/", budgetRoutes);  // home page
 app.use("/", authRoutes);    // /login, /signup, /logout
 app.use("/", historyRoutes); // /history
 app.use('/budgets', budgetFeatureRoutes);
+app.use('/dashboard', dashboardRoutes);
+
+app.use('/', (req, res, next) => {
+  if (req.session.user && req.path === '/') {
+    return res.redirect('/dashboard');
+  }
+  next();
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);

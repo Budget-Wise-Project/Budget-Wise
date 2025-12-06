@@ -1,0 +1,207 @@
+main.budget-page,
+main.dashboard-page {
+    max-width: 1000px;
+    margin: 8rem auto 2rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header-section h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.8rem;
+    color: #1b5e20;
+}
+
+.header-section p {
+    margin: 0 0 1.5rem 0;
+    font-size: 0.95rem;
+    color: #455a64;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #eceff1;
+    margin: 2rem 0;
+}
+
+
+/*Budget Management Form*/
+
+.budget-form-section h2,
+.budget-page h2 {
+    font-size: 1.5rem;
+    color: #2e7d32; 
+    margin-bottom: 1.2rem;
+}
+
+.budget-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 1.5rem 2rem;
+    padding: 2rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fafafa;
+}
+
+.budget-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.budget-form label {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.budget-form input,
+.budget-form select {
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #cfd8dc;
+    font-size: 0.95rem;
+}
+
+.budget-form .submit-button {
+    grid-column: 1 / -1; 
+    margin-top: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    padding: 0.7rem 1.2rem;
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: #2e7d32;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.budget-form .submit-button:hover {
+    background-color: #256628;
+}
+
+/* Existing Budgets List */
+
+.current-budgets-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 1.5rem;
+}
+
+.budget-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
+    border: 1px solid #e0e0e0;
+    transition: transform 0.1s;
+}
+
+.budget-card h3 {
+    color: #1b5e20;
+    margin-top: 0;
+    font-size: 1.2em;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.budget-card strong {
+    font-weight: 600;
+}
+
+.delete-form {
+    margin-top: 15px;
+    text-align: right;
+}
+
+.delete-button {
+    border: 1px solid #c62828;
+    background: #fff;
+    color: #c62828;
+    border-radius: 4px;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.delete-button:hover {
+    background: #c62828;
+    color: #fff;
+}
+
+.dashboard-content-grid {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.budget-tracking-list {
+    flex: 3; 
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.tracking-stats {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.tracking-stats strong {
+    font-weight: 700;
+    color: #333;
+}
+
+.percentage-used-text {
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-top: 5px;
+    color: #455a64;
+}
+
+/* Progress Bar Styling */
+
+.progress-bar-container {
+    background-color: #e8f5e9; 
+    border-radius: 4px;
+    height: 10px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #2e7d32; 
+    transition: width 0.4s ease-in-out;
+}
+
+/* Utility Summary Card  */
+.utility-summary-card {
+    flex: 1; 
+    padding: 25px;
+    background: #f1f8e9; 
+    border: 1px solid #c8e6c9;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.utility-summary-card p {
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+    .budget-form {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+    }
+    .dashboard-content-grid {
+        flex-direction: column;
+    }
+}

@@ -6,7 +6,7 @@ const router = Router();
 
 const redirectIfLoggedIn = (req, res, next) => {
   if (req.session.user) {
-    return res.redirect("/history");
+    return res.redirect("/dashboard");
   }
   next();
 };
@@ -23,7 +23,7 @@ router.post("/signup", redirectIfLoggedIn, async (req, res) => {
   try {
     const newUser = await createUser({ firstName, lastName, email, password });
     req.session.user = newUser;
-    return res.redirect("/history");
+    return res.redirect("/dashboard");
   } catch (error) {
     return res.status(400).render("signup", {
       title: "Sign Up - BudgetWise",
@@ -45,7 +45,7 @@ router.post("/login", redirectIfLoggedIn, async (req, res) => {
   try {
     const user = await authenticateUser(email, password);
     req.session.user = user;
-    return res.redirect("/history");
+    return res.redirect("/dashboard");
   } catch (error) {
     return res.status(401).render("login", {
       title: "Log In - BudgetWise",
