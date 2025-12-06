@@ -1,14 +1,9 @@
-<head>
-  <!-- Page-specific CSS -->
-  <link rel="stylesheet" href="/public/css/budget.css" />
-</head>
-
 <main class="budget-page">
   <section class="header-section">
-    <h1 class="page-title">Set Your Monthly Budget</h1>
+    <h1 class="page-title">Manage Your Budgets</h1>
     <p class="description">
-      Enter your monthly spending limit - BudgetWise will track your progress and help you stay on top of your finances.
-    </p>
+      Set and manage specific spending limits by category and time period using BudgetWise.
+      </p>
   </section>
 
   {{#if error}}
@@ -17,31 +12,77 @@
   </section>
   {{/if}}
 
-  {{#if budget}}
-    <section class="current-budget">
-        <h2>Your Current Budget</h2>
-        <p class="current-budget-amount">
-            ${{budget.totalBudget}}
-        </p>
-        </section>
-  {{/if}}
+  <hr>
 
-  <section class="budget-form-section">
-    <form method="POST" action="/budget" class="budget-form">
-        <label for="totalBudget">Total Monthly Budget</label>
+ <h2>Create New Budget</h2>
+<section class="budget-form-section">
+    <form method="POST" action="/budgets" class="budget-form">
+        
+        <div class = "form-group">
+            <label for="amountLimit">Budget Limit ($)</label>
 
-        <input
-            id="totalBudget"
-            name="totalBudget"
-            type="number"
-            min="0"
-            step="0.01"
-            value="{{#if budget}}{{budget.totalBudget}}{{/if}}"
-            required
-        />
+            <input
+                id="amountLimit"
+                name="amountLimit"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="e.g., 500.00"
+                required
+            />
+        </div>
+        
+        <div class = "form-group">
+            <label for="category">Category</label>
+            <select id="category" name="category" required>
+                <option value="" disabled selected>Select a Category</option>
+                {{#each categories}}
+                    <option value="{{this}}">{{this}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="startDate">Start Date</label>
+            <input id="startDate" name="startDate" type="date" required />
+        </div>
+        
+        <div class="form-group">
+            <label for="endDate">End Date</label>
+            <input id="endDate" name="endDate" type="date" required />
+        </div>
+
         <button type="submit" class="submit-button">Save Budget</button>
     </form>
 </section>
+
+<hr>
+
+<h2>Existing Budgets ({{budgets.length}})</h2>
+{{#if budgets.length}}
+    <section class="current-budgets-list">
+        {{#each budgets}}
+            <div class="budget-card">
+                <h3>{{this.category}}</h3>
+                <p>
+                    <strong>Limit:</strong> ${{this.amountLimit}} <br>
+                    <strong>Period:</strong> {{this.startDate}} to {{this.endDate}}
+                </p>
+
+                <form method="POST" action="/budgets/delete" class="delete-form">
+                    <input type="hidden" name="budgetId" value="{{this._id}}">
+                    <button type="submit" class="delete-button" onclick="return confirm('Delete {{this.category}} budget?')">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        {{/each}}
+    </section>
+{{else}}
+    <p>You have no budgets set up yet.</p>
+    {{/if}}
+
+    <hr>
 
 <section class="nav-section">
     <a href="/dashboard" class="back-link">&larr; Back to Dashboard</a>

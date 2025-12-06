@@ -6,6 +6,7 @@ import session from "express-session";
 import budgetRoutes from "./routes/budgetRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import historyRoutes from "./routes/historyRoutes.js";
+import budgetFeatureRoutes from './routes/budgets.js';
 
 const app = express();
 const PORT = 3000;
@@ -64,6 +65,7 @@ app.set("view engine", "handlebars");
 app.use("/", budgetRoutes);  // home page
 app.use("/", authRoutes);    // /login, /signup, /logout
 app.use("/", historyRoutes); // /history
+app.use('/budgets', budgetFeatureRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
