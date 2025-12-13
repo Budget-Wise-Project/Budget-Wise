@@ -6,6 +6,8 @@
   <link rel="stylesheet" href="/public/css/main.css" />
   <link rel="stylesheet" href="/public/css/home.css" />
   <link rel="stylesheet" href="/public/css/dashboard-budget.css" /> 
+  <link rel="stylesheet" href="/public/css/utilities.css" />
+  <link rel="stylesheet" href="/public/css/bills-list.css">
 </head>
 <body>
   <header>
@@ -13,10 +15,11 @@
       <img src="/public/images/BudgetWiseLogo.png" alt="BudgetWise Logo" class="logo-img" />
     </div>
     <nav class="main-nav">
-      <a href="/">Home</a>
+      <a href="/dashboard">Home</a>
       {{#if user}}
         <a href="/history">History</a>
-        <a href="/budgets">Budget</a> 
+        <a href="/budgets">Budget</a>
+        <a href="/utilities">Utilities</a>
         <form method="POST" action="/logout" class="logout-form">
           <button type="submit">Log out</button>
         </form>

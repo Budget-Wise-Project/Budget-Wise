@@ -1,0 +1,52 @@
+<!-- views/utilities/form.handlebars -->
+<main class="page-content form-page">
+  <section class="utility-form">
+    <h1>{{title}}</h1>
+
+    {{#if error}}
+      <div class="error-banner">
+        ⚠️ {{error}}
+      </div>
+    {{/if}}
+
+    <form action="{{action}}" method="post">
+      <div class="form-group">
+        <label for="provider">Provider</label>
+        <input id="provider" name="provider" type="text" value="{{utility.provider}}" required />
+      </div>
+
+      <div class="form-group">
+        <label for="accountNumber">Account Number</label>
+        <input id="accountNumber" name="accountNumber" type="text" value="{{utility.accountNumber}}" required />
+      </div>
+
+      <!-- Default day of month instead of full date -->
+      <div class="form-group">
+        <label for="defaultDay">Default Day of Month</label>
+        <input id="defaultDay" name="defaultDay" type="number" min="1" max="31" value="{{utility.defaultDay}}" />
+      </div>
+
+      <div class="form-group">
+        <label for="defaultAmount">Default Amount ($)</label>
+        <input id="defaultAmount" name="defaultAmount" type="number" step="0.01" value="{{utility.defaultAmount}}" />
+      </div>
+
+      <div class="form-group form-group-notes">
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes">{{utility.notes}}</textarea>
+      </div>
+
+      <!-- Option B: label in col 1, checkbox in col 2 -->
+      <div class="checkbox-row">
+        <span class="checkbox-label">Active </span>
+        <label class="checkbox-control">
+          <input id="active" type="checkbox" name="active" {{#if utility.active}}checked{{/if}} />
+        </label>
+      </div>
+
+      <button type="submit">Save Utility</button>
+    </form>
+
+    <p><a href="/utilities">← Back to utilities</a></p>
+  </section>
+</main>

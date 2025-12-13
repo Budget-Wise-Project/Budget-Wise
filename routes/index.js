@@ -3,6 +3,7 @@ import homeRoutes from './budgetRoutes.js';
 import authRoutes from './authRoutes.js';
 import historyRoutes from './historyRoutes.js';
 import budgetFeatureRoutes from './budgets.js';
+import utilitiesRoutes from './utilities.js';
 
 const router = Router();
 
@@ -17,6 +18,9 @@ router.use("/", historyRoutes);
 
 //Budget feature
 router.use('/budgets', budgetFeatureRoutes);
+
+// Utilities feature
+router.use('/utilities', utilitiesRoutes);
 
 //404 handler
 router.use('*',(req, res) => {

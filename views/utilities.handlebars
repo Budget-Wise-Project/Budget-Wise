@@ -1,0 +1,102 @@
+<!-- views/utilities/index.handlebars -->
+<main class="page-content utilities-page">
+  <section class="header-section">
+    <h1>Manage Your Utilities</h1>
+    <p>Track providers, default day of month, amounts, and notes.</p>
+  </section>
+
+  {{#if error}}
+    <div class="error-banner">⚠️ {{error}}</div>
+  {{/if}}
+
+  <!-- Utility form -->
+  <section class="utility-form">
+    <h2>Add a Utility</h2>
+    <form action="/utilities" method="post">
+      <div class="form-group">
+        <label for="provider">Provider</label>
+        <input id="provider" name="provider" type="text" required>
+      </div>
+
+      <div class="form-group">
+        <label for="accountNumber">Account Number</label>
+        <input id="accountNumber" name="accountNumber" type="text" required>
+      </div>
+
+      <div class="form-group">
+        <label for="defaultDay">Default Day of Month</label>
+        <input id="defaultDay" name="defaultDay" type="number" min="1" max="31">
+      </div>
+
+      <div class="form-group">
+        <label for="defaultAmount">Default Amount ($)</label>
+        <input id="defaultAmount" name="defaultAmount" type="number" step="0.01">
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes"></textarea>
+      </div>
+
+      <div class="checkbox-row">
+        <label for="active">
+          <input id="active" type="checkbox" name="active">
+          Active
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-success">Save Utility</button>
+    </form>
+  </section>
+
+  <hr>
+
+  <!-- Utilities list -->
+  {{#if utilities.length}}
+    <section class="current-utilities-list">
+      {{#each utilities}}
+        <div class="utility-card">
+          <h3>{{provider}}</h3>
+          <div class="utility-meta">
+            <span><strong>Account:</strong> {{accountNumber}}</span>
+            <span><strong>Default day:</strong> {{#if defaultDay}}{{defaultDay}}{{else}}—{{/if}}</span>
+            <span><strong>Default amount:</strong> ${{defaultAmount}}</span>
+            <span>
+              <strong>Status:</strong>
+              {{#if active}}
+                <span class="status-active">Active</span>
+              {{else}}
+                <span class="status-inactive">Inactive</span>
+              {{/if}}
+            </span>
+            <span><strong>Notes:</strong> {{#if notes}}{{notes}}{{else}}—{{/if}}</span>
+          </div>
+
+          <div class="utility-actions">
+            <a href="/utilities/{{_id}}/bills" class="btn btn-info">View Bills</a>
+
+            {{#if active}}
+              <a href="/utilities/{{_id}}/edit" class="btn btn-primary">Edit</a>
+            {{else}}
+              <button class="btn btn-secondary" disabled title="Inactive utilities cannot be edited">
+                Edit (Disabled)
+              </button>
+            {{/if}}
+
+            <form action="/utilities/{{_id}}/delete" method="post">
+              <button class="btn btn-danger" onclick="return confirm('Delete {{provider}}?')">Delete</button>
+            </form>
+
+            <form action="/utilities/{{_id}}/toggle" method="post">
+              <button class="btn btn-warning">
+                {{#if active}}Deactivate{{else}}Activate{{/if}}
+              </button>
+            </form>
+          </div>
+        </div>
+      {{/each}}
+    </section>
+  {{else}}
+    <p>No utilities yet.</p>
+  {{/if}}
+</main>

@@ -1,0 +1,43 @@
+<main class="page-content bills-page">
+  <h1>Bills for Utility</h1>
+
+  {{#if bills.length}}
+    <section class="bills-list">
+      {{#each bills}}
+        <div class="bill-card {{status}}">
+          <h3>Due: {{dueDateFormatted}}</h3>
+          <p><strong>Amount:</strong> ${{amountFormatted}}</p>
+          <p><strong>Status:</strong> {{status}}</p>
+          <p><strong>Notes:</strong> {{#if notes}}{{notes}}{{else}}—{{/if}}</p>
+
+          {{#if showMarkPaid}}
+            <form action="/bills/{{_id}}/mark-paid" method="POST">
+              <button type="submit" class="btn btn-success">Mark as Paid</button>
+            </form>
+          {{/if}}
+        </div>
+      {{/each}}
+    </section>
+  {{else}}
+    <p>No bills found for this utility.</p>
+  {{/if}}
+
+  <hr>
+
+<h2>Add a New Bill</h2>
+<form action="/bills/from-utility/{{utilityId}}" method="POST">
+  <label for="dueDate">Due Date:</label>
+  <input type="date" name="dueDate" required>
+
+  <label for="amount">Amount:</label>
+  <input type="number" step="0.01" name="amount" required>
+
+  <label for="notes">Notes:</label>
+  <input type="text" name="notes">
+
+  <button type="submit" class="btn btn-primary">Add Bill</button>
+</form>
+
+
+  <p><a href="/utilities">← Back to Utilities</a></p>
+</main>

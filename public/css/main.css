@@ -1,4 +1,4 @@
-/* Global box-sizing so padding doesn't push things past 100% width */
+/* ===== Global Reset & Base ===== */
 *,
 *::before,
 *::after {
@@ -11,22 +11,26 @@ body {
   margin: 0;
   display: flex;
   flex-direction: column;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+.page-content {
+  flex: 1;
+  padding-top: 6rem; 
+}
 
+/* ===== Header ===== */
 header {
   flex-shrink: 0;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #ffffff;
+  background: #fff;
   padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   z-index: 1000;
 }
 
@@ -35,7 +39,6 @@ header {
   height: auto;
   object-fit: contain;
 }
-
 
 .main-nav {
   margin-left: auto;
@@ -50,111 +53,92 @@ header {
   font-weight: 600;
   font-size: 0.95rem;
 }
+.main-nav a:hover { text-decoration: underline; }
 
-.main-nav a:hover {
-  text-decoration: underline;
-}
-
-.logout-form {
-  margin: 0;
-}
-
+.logout-form { margin: 0; }
 .logout-form button {
   border: none;
   background: #c62828;
-  color: #ffffff;
+  color: #fff;
   border-radius: 4px;
   padding: 0.35rem 0.8rem;
   font-size: 0.85rem;
   cursor: pointer;
 }
+.logout-form button:hover { background: #b71c1c; }
 
-.logout-form button:hover {
-  background: #b71c1c;
-}
-
-
-main.homepage {
-  flex: 1; 
-  max-width: 900px;
-  margin: 8rem auto 2rem auto;
-  padding: 2rem;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-
+/* ===== Footer ===== */
 .site-footer {
   flex-shrink: 0;
   padding: 1rem;
-  background-color: #2e7d32;
+  background: #2e7d32;
   color: #fff;
   text-align: center;
+  margin-top: auto;
 }
 
-/* ===== Auth pages: login / signup ===== */
+/* ===== Homepage ===== */
+main.homepage {
+  flex: 1; 
+  max-width: 900px;
+  margin: 8rem auto 2rem;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
 
+/* ===== Auth Pages ===== */
 main.auth-page {
   flex: 1; 
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 6rem;      
-  margin-bottom: 2rem;
+  margin: 6rem 0 2rem;
   padding: 2rem 1rem;
 }
 
 .auth-card {
   width: 100%;
   max-width: 420px;
-  background: #ffffff;
+  background: #fff;
   border-radius: 10px;
   padding: 2rem 2.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .auth-card h1 {
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1.5rem;
   font-size: 1.6rem;
   color: #1b5e20;
   text-align: center;
 }
 
-/* Form layout */
-
+/* Auth Form */
 .auth-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
-
-.auth-form .form-row {
-  display: flex;
-  flex-direction: column;
-}
-
+.auth-form .form-row { display: flex; flex-direction: column; }
 .auth-form label {
   font-weight: 600;
   margin-bottom: 0.3rem;
   font-size: 0.95rem;
 }
-
 .auth-form input {
   padding: 0.55rem 0.75rem;
   border-radius: 6px;
   border: 1px solid #cfd8dc;
   font-size: 0.95rem;
 }
-
 .auth-form input:focus {
   outline: none;
   border-color: #2e7d32;
-  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.15);
+  box-shadow: 0 0 0 2px rgba(46,125,50,0.15);
 }
 
 /* Buttons */
-
 .primary-button {
   margin-top: 0.5rem;
   border: none;
@@ -162,93 +146,73 @@ main.auth-page {
   padding: 0.6rem 1.2rem;
   font-weight: 600;
   font-size: 1rem;
-  background-color: #2e7d32;
-  color: #ffffff;
+  background: #2e7d32;
+  color: #fff;
   cursor: pointer;
 }
+.primary-button:hover { background: #256628; }
 
-.primary-button:hover {
-  background-color: #256628;
-}
-
-/* Errors + link text */
-
+/* Errors + Links */
 .error-message {
   margin-bottom: 1rem;
   padding: 0.6rem 0.75rem;
   border-radius: 6px;
-  background-color: #ffebee;
+  background: #ffebee;
   color: #c62828;
   font-size: 0.9rem;
 }
-
 .auth-switch {
   margin-top: 1rem;
   text-align: center;
   font-size: 0.9rem;
 }
-
 .auth-switch a {
   color: #2e7d32;
   text-decoration: none;
   font-weight: 600;
 }
+.auth-switch a:hover { text-decoration: underline; }
 
-.auth-switch a:hover {
-  text-decoration: underline;
-}
-
-/* ===== History page (bill history) ===== */
-
+/* ===== History Page ===== */
 main.history-page {
   flex: 1; 
   max-width: 1000px;
-  margin: 8rem auto 2rem auto;  
+  margin: 8rem auto 2rem;  
   padding: 2rem;
-  background: #ffffff;
+  background: #fff;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-/* Header text */
-
 .history-header h1 {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.5rem;
   font-size: 1.6rem;
   color: #1b5e20;
 }
-
 .history-header p {
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1.5rem;
   font-size: 0.95rem;
   color: #455a64;
 }
 
-/* Filter form */
-
-.history-filters {
-  margin-bottom: 1.5rem;
-}
-
+/* Filters */
+.history-filters { margin-bottom: 1.5rem; }
 .history-filter-form {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem 1.5rem;
   align-items: flex-end;
 }
-
 .history-filter-form .form-row {
   display: flex;
   flex-direction: column;
   min-width: 160px;
 }
-
 .history-filter-form label {
   font-weight: 600;
   margin-bottom: 0.3rem;
   font-size: 0.9rem;
 }
-
 .history-filter-form input,
 .history-filter-form select {
   padding: 0.45rem 0.65rem;
@@ -256,42 +220,29 @@ main.history-page {
   border: 1px solid #cfd8dc;
   font-size: 0.9rem;
 }
-
 .history-filter-form input:focus,
 .history-filter-form select:focus {
   outline: none;
   border-color: #2e7d32;
-  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.15);
+  box-shadow: 0 0 0 2px rgba(46,125,50,0.15);
 }
 
-/* Results table */
-
-.history-results {
-  margin-top: 0.5rem;
-}
-
+/* Results Table */
+.history-results { margin-top: 0.5rem; }
 .history-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9rem;
 }
-
 .history-table th,
 .history-table td {
   padding: 0.6rem 0.75rem;
   border-bottom: 1px solid #eceff1;
   text-align: left;
 }
-
 .history-table thead th {
-  background-color: #f5f5f5;
+  background: #f5f5f5;
   font-weight: 600;
 }
-
-.history-table tbody tr:nth-child(even) {
-  background-color: #fafafa;
-}
-
-.history-table tbody tr:hover {
-  background-color: #f1f8e9;
-}
+.history-table tbody tr:nth-child(even) { background: #fafafa; }
+.history-table tbody tr:hover { background: #f1f8e9; }

@@ -1,0 +1,99 @@
+:root {
+  --accent: #2e7d32;
+  --accent-dark: #1b5e20;
+  --danger: #c62828;
+  --warning: #f9a825;
+  --card-bg: #ffffff;
+  --muted-text: #455a64;
+}
+
+/* ===== Bills Page Container ===== */
+.page-content.bills-page {
+  width: 95%;
+  max-width: 900px;
+  margin: 6rem auto;
+  padding: 2rem;
+  background: var(--card-bg);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.page-content.bills-page h1 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.8rem;
+  color: var(--accent-dark);
+  text-align: center;
+}
+
+/* ===== Bills List ===== */
+.bills-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 1rem;
+}
+
+.bill-card {
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transition: transform 0.15s ease;
+}
+.bill-card:hover {
+  transform: translateY(-2px);
+}
+
+.bill-card h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.2rem;
+  color: var(--accent);
+}
+
+.bill-card p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  color: var(--muted-text);
+}
+.bill-card p strong {
+  color: #333;
+}
+
+/* ===== Status-based colors ===== */
+.bill-card.paid {
+  border-left: 6px solid var(--accent);
+  background: #e8f5e9;
+}
+.bill-card.overdue {
+  border-left: 6px solid var(--danger);
+  background: #ffebee;
+}
+.bill-card.upcoming {
+  border-left: 6px solid var(--warning);
+  background: #fffde7;
+}
+
+/* ===== Back Link ===== */
+.page-content.bills-page p a {
+  display: inline-block;
+  margin-top: 2rem;
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.page-content.bills-page p a:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+  .page-content.bills-page {
+    padding: 1.5rem;
+  }
+  .bill-card {
+    padding: 1rem;
+  }
+}

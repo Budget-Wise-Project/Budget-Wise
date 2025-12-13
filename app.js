@@ -8,11 +8,31 @@ import authRoutes from "./routes/authRoutes.js";
 import historyRoutes from "./routes/historyRoutes.js";
 import budgetFeatureRoutes from './routes/budgets.js';
 import dashboardRoutes from "./routes/dashboardRoutes.js";
+import utilitiesRoutes from "./routes/utilities.js";
+import billsRoutes from "./routes/billRoutes.js";
 
 const app = express();
 const PORT = 3000;
 
-// Support PUT/DELETE via _method if you need it
+const hbs = exphbs.create({
+  defaultLayout: "main",
+  helpers: {
+    eq: (a, b) => a === b,
+    formatDate: (date) => {
+      if (!date) return "";
+      return new Date(date).toLocaleDateString("en-US");
+    },
+    formatMoney: (amount) => {
+      if (amount === undefined || amount === null || isNaN(amount)) return "";
+      return Number(amount).toFixed(2);
+    }
+  }
+});
+
+app.engine("handlebars", hbs.engine);
+app.set("view engine", "handlebars");
+
+
 const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   if (req.body && req.body._method) {
     req.method = req.body._method;
@@ -38,29 +58,10 @@ app.use(
   })
 );
 
-// expose logged-in user to all templates
 app.use((req, res, next) => {
   res.locals.user = req.session.user;
   next();
 });
-
-app.engine(
-  "handlebars",
-  exphbs.engine({
-    defaultLayout: "main",
-    helpers: {
-      formatDate: (date) => {
-        if (!date) return "";
-        return new Date(date).toLocaleDateString("en-US");
-      },
-      formatMoney: (amount) => {
-        if (amount === undefined || amount === null || isNaN(amount)) return "";
-        return Number(amount).toFixed(2);
-      },
-    },
-  })
-);
-app.set("view engine", "handlebars");
 
 // ROUTES
 app.use("/", budgetRoutes);  // home page
@@ -68,6 +69,8 @@ app.use("/", authRoutes);    // /login, /signup, /logout
 app.use("/", historyRoutes); // /history
 app.use('/budgets', budgetFeatureRoutes);
 app.use('/dashboard', dashboardRoutes);
+app.use('/utilities', utilitiesRoutes);
+app.use('/bills', billsRoutes);
 
 app.use('/', (req, res, next) => {
   if (req.session.user && req.path === '/') {
