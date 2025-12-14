@@ -7,7 +7,10 @@ const router = Router();
 
 router.get('/', async (req, res) => {
     try {
-        const transactions = await transactionsData.getAllTransactions();
+        if (!req.session.user) return res.redirect('/login');
+
+        const userId = req.session.user._id;
+        const transactions = await transactionsData.getAllTransactions(userId);
         res.render('transactions', { transactions });
     } catch (e) {
         res.status(500).render('transactions', { error: e });
@@ -15,15 +18,29 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const { title, amount, category, date, notes } = req.body;
+    const { title, amount, category, type, date, notes } = req.body;
 
     try {
-        await transactionsData.addTransaction(title, amount, category, date, notes);
+        if (!req.session.user) return res.redirect('/login');
+
+        const userId = req.session.user._id;
+
+        let name = 'Unknown';
+        if (req.session.user.firstName && req.session.user.lastName) {
+            name = `${req.session.user.firstName} ${req.session.user.lastName}`;
+        } else if (req.session.user.name) {
+            name = req.session.user.name;
+        }
+
+        await transactionsData.addTransaction(userId, name, title, amount, category, type, date, notes);
         res.redirect('/transactions');
     } catch (e) {
         let transactions = [];
         try {
-            transactions = await transactionsData.getAllTransactions();
+            if (req.session.user) {
+                const userId = req.session.user._id;
+                transactions = await transactionsData.getAllTransactions(userId);
+            }
         } catch (err) {
      
         }
@@ -37,7 +54,10 @@ router.post('/', async (req, res) => {
 
 router.get('/edit/:id', async (req, res) => {
     try {
-        const trans = await transactionsData.getTransactionById(req.params.id);
+        if (!req.session.user) return res.redirect('/login');
+
+        const userId = req.session.user._id;
+        const trans = await transactionsData.getTransactionById(req.params.id, userId);
         res.render('editTransaction', { trans });
     } catch (e) {
         res.status(404).render('editTransaction', { error: e });
@@ -45,13 +65,18 @@ router.get('/edit/:id', async (req, res) => {
 });
 
 router.post('/edit/:id', async (req, res) => {
-    const { title, amount, category, date, notes } = req.body;
+    const { title, amount, category, type, date, notes } = req.body;
 
     try {
-        await transactionsData.updateTransaction(req.params.id, {
+        if (!req.session.user) return res.redirect('/login');
+
+        const userId = req.session.user._id;
+
+        await transactionsData.updateTransaction(req.params.id, userId, {
             title,
             amount,
             category,
+            type,
             date,
             notes
         });
@@ -60,14 +85,18 @@ router.post('/edit/:id', async (req, res) => {
     } catch (e) {
         res.status(400).render('editTransaction', {
             error: e,
-            trans: { _id: req.params.id, title, amount, category, date, notes }
+            trans: { _id: req.params.id, title, amount, category, type, date, notes }
         });
     }
 });
 
 router.post('/delete/:id', async (req, res) => {
     try {
-        await transactionsData.deleteTransaction(req.params.id);
+        if (!req.session.user) return res.redirect('/login');
+
+        const userId = req.session.user._id;
+
+        await transactionsData.deleteTransaction(req.params.id, userId);
         res.redirect('/transactions');
     } catch (e) {
         res.status(500).render('error', { error: e });
