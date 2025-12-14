@@ -254,3 +254,90 @@ hr {
         flex-direction: column;
     }
 }
+
+.utility-summary-card {
+  padding: 25px;
+  background: #f9fbe7;
+  border: 1px solid #cddc39;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.utility-summary-card h3 {
+  margin-top: 0;
+  font-size: 1.3rem;
+  color: #1b5e20;
+  margin-bottom: 1rem;
+}
+
+.utility-summary-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  margin-bottom: 1rem;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.summary-item.total {
+  font-weight: 700;
+  color: #333;
+}
+
+.status-badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.status-paid { background: #2e7d32; }
+.status-due { background: #1976d2; }
+.status-upcoming { background: #ff9800; }
+.status-overdue { background: #c62828; }
+
+.summary-count {
+  font-weight: 700;
+  color: #333;
+}
+
+.utility-progress-bar {
+  display: flex;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 1rem 0;
+  background: #eceff1;
+}
+
+.utility-progress-paid { background: #2e7d32; }
+.utility-progress-due { background: #1976d2; }
+.utility-progress-upcoming { background: #ff9800; }
+.utility-progress-overdue { background: #c62828; }
+
+.utility-summary-note {
+  font-size: 0.9rem;
+  color: #455a64;
+  margin-top: 0.5rem;
+}
+
+.inapp-reminders {
+  padding: 0.75rem 1rem;
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+.reminders-inline {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+  display: grid;
+  gap: 6px;
+}

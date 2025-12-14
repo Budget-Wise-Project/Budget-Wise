@@ -1,19 +1,21 @@
 <main class="dashboard-page">
-    <section class="header-section">
-        <h1 class="page-title">BudgetWise Dashboard</h1>
-        <p class="description">Your central hub for budget tracking and bill management.</p>
-    </section>
+  <section class="header-section">
+    <h1 class="page-title">BudgetWise Dashboard</h1>
+    <p class="description">Your central hub for budget tracking and bill
+      management.</p>
+  </section>
 
-    {{#if error}}
+  {{#if error}}
     <section class="error-section">
         <p class="error-message">🛑 {{error}}</p>
     </section>
-    {{/if}}
+  {{/if}}
 
-    <hr>
+  <hr />
 
-    <h2>📊Budget Tracking Summaries</h2>
-    <p>Track your spending against your goals. <a href="/budgets">Manage Budgets</a></p>
+  <h2>📊 Budget Tracking Summaries</h2>
+  <p>Track your spending against your goals.
+    <a href="/budgets">Manage Budgets</a></p>
 
     {{#if budgetSummaries.length}}
         <section class="budget-tracking-list">
@@ -44,13 +46,95 @@
   {{else}}
     <p>You have no active budgets being tracked. Please <a href="/budgets">set one up</a>!</p>
   {{/if}}
+  <hr />
 
-  <hr>
-
-  <h2>Upcoming Bills & Utilities </h2>
+  <h2>📌 Upcoming Bills & Utilities</h2>
   {{#if utilitySummary}}
     <section class="utility-summary-card">
-        <p>Utility data will be displayed here, showing how many bills are paid, due, or upcoming.</p>
+      <h3>Utility Bill Status Overview</h3>
+      <div class="utility-summary-stats">
+        <div class="summary-item">
+          <span class="status-badge status-paid">Paid</span>
+          <span class="summary-count">{{utilitySummary.paid}}</span>
+        </div>
+        <div class="summary-item">
+          <span class="status-badge status-due">Due Today</span>
+          <span class="summary-count">{{utilitySummary.due}}</span>
+        </div>
+        <div class="summary-item">
+          <span class="status-badge status-upcoming">Upcoming</span>
+          <span class="summary-count">{{utilitySummary.upcoming}}</span>
+        </div>
+        <div class="summary-item">
+          <span class="status-badge status-overdue">Overdue</span>
+          <span class="summary-count">{{utilitySummary.overdue}}</span>
+        </div>
+        <div class="summary-item total">
+          <strong>Total Bills:</strong>
+          {{utilitySummary.total}}
+        </div>
+      </div>
+
+      <div class="utility-progress-bar">
+        <div
+          class="utility-progress-paid"
+          style="width: {{calcPercent
+            utilitySummary.paid
+            utilitySummary.total
+          }}%;"
+        ></div>
+        <div
+          class="utility-progress-due"
+          style="width: {{calcPercent
+            utilitySummary.due
+            utilitySummary.total
+          }}%;"
+        ></div>
+        <div
+          class="utility-progress-upcoming"
+          style="width: {{calcPercent
+            utilitySummary.upcoming
+            utilitySummary.total
+          }}%;"
+        ></div>
+        <div
+          class="utility-progress-overdue"
+          style="width: {{calcPercent
+            utilitySummary.overdue
+            utilitySummary.total
+          }}%;"
+        ></div>
+      </div>
+
+      <p class="utility-summary-note">
+        Track and manage all your utilities in one place.
+        <a href="/utilities">Go to Utilities</a>
+      </p>
     </section>
+  {{else}}
+    <p>No utility bills found.</p>
   {{/if}}
+
+  <hr />
+
+  <h2>🔔 Reminders</h2>
+  {{#if reminders.length}}
+    <section class="inapp-reminders">
+      <h3>🔔 Notifications</h3>
+      <ul class="reminders-inline">
+        {{#each reminders}}
+          <li>
+            {{#if (eq this.type "on")}}📅 Due today{{else}}⏳ Upcoming{{/if}}
+            —
+            {{this.utilityName}}
+            bill of ${{formatMoney this.amount}}
+            ({{formatDate this.reminderDate}})
+          </li>
+        {{/each}}
+      </ul>
+    </section>
+  {{else}}
+    <p>No reminders scheduled.</p>
+  {{/if}}
+
 </main>

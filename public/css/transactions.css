@@ -1,0 +1,90 @@
+/* ===== Transaction Page Scoped Styles ===== */
+main.transaction-page {
+  max-width: 800px;
+  margin: 6rem auto 2rem auto;
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Headings */
+main.transaction-page h2 {
+  margin: 0.75rem 0;
+  font-size: 1.4rem;
+  color: #1b5e20;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.3rem;
+}
+
+/* Form */
+main.transaction-page form {
+  background: #fafafa;
+  padding: 1rem 1.2rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+main.transaction-page .form-group {
+  margin-bottom: 0.8rem;
+}
+main.transaction-page .form-group label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+main.transaction-page .form-control {
+  padding: 0.45rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #cfd8dc;
+  font-size: 0.9rem;
+}
+main.transaction-page .form-control:focus {
+  outline: none;
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 2px rgba(46,125,50,0.15);
+}
+
+/* Buttons */
+main.transaction-page .btn {
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 0.9rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+main.transaction-page .btn-sm {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+}
+
+/* Transaction List */
+main.transaction-page .list-group {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+main.transaction-page .list-group-item {
+  background: #fff;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 0.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: box-shadow 0.2s ease;
+}
+main.transaction-page .list-group-item:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+main.transaction-page .list-group-item strong {
+  color: #1b5e20;
+}
+main.transaction-page .pull-right {
+  display: flex;
+  gap: 0.4rem;
+}

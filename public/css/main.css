@@ -246,3 +246,27 @@ main.history-page {
 }
 .history-table tbody tr:nth-child(even) { background: #fafafa; }
 .history-table tbody tr:hover { background: #f1f8e9; }
+
+
+.current-reminders-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 1rem;
+}
+
+.reminder-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.reminders-inline {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+  display: grid;
+  gap: 6px;
+}
