@@ -8,10 +8,8 @@ import authRoutes from "./routes/authRoutes.js";
 import historyRoutes from "./routes/historyRoutes.js";
 import budgetFeatureRoutes from './routes/budgets.js';
 import dashboardRoutes from "./routes/dashboardRoutes.js";
-import utilitiesRoutes from "./routes/utilities.js";
+import utilitiesRoutes from "./routes/utilitiesRoutes.js";
 import billsRoutes from "./routes/billRoutes.js";
-
-import billsRoutes from "./routes/bills.js";
 import transactionsRoutes from "./routes/transactions.js";
 
 
@@ -83,7 +81,6 @@ app.use('/', (req, res, next) => {
   next();
 });
 
-app.use("/bills", billsRoutes);  // add/edit.list bills
 app.use("/transactions", transactionsRoutes);  //add/edit/delete transactions
 
 app.listen(PORT, () => {
