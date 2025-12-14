@@ -17,6 +17,7 @@
  <h2>Create New Budget</h2>
 <section class="budget-form-section">
     <form method="POST" action="/budgets" class="budget-form">
+        <div id="budget-form-message" class="form-message" aria-live="polite"></div>
         
         <div class = "form-group">
             <label for="amountLimit">Budget Limit ($)</label>
@@ -58,7 +59,7 @@
 
 <hr>
 
-<h2>Existing Budgets ({{budgets.length}})</h2>
+<h2>Existing Budgets (<span id="budgets-count">{{budgets.length}}</span>)</h2>
 {{#if budgets.length}}
     <section class="current-budgets-list">
         {{#each budgets}}
@@ -71,7 +72,7 @@
 
                 <form method="POST" action="/budgets/delete" class="delete-form">
                     <input type="hidden" name="budgetId" value="{{this._id}}">
-                    <button type="submit" class="delete-button" onclick="return confirm('Delete {{this.category}} budget?')">
+                    <button type="submit" class="delete-button" data-confirm="Delete {{this.category}} budget?">
                         Delete
                     </button>
                 </form>

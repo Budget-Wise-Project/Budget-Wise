@@ -36,12 +36,14 @@
         <textarea id="notes" name="notes">{{utility.notes}}</textarea>
       </div>
 
+      {{#if utility._id}}
       <div class="checkbox-row">
         <span class="checkbox-label">Active </span>
         <label class="checkbox-control">
           <input id="active" type="checkbox" name="active" {{#if utility.active}}checked{{/if}} />
         </label>
       </div>
+      {{/if}}
 
       <button type="submit">Save Utility</button>
     </form>

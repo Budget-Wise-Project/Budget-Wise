@@ -1,6 +1,6 @@
 // routes/dashboard.js
 import { Router } from "express";
-import { budgetData, billsData, remindersData } from "../data/index.js";
+import { budgetData, billsData, remindersData, utilitiesData } from "../data/index.js";
 
 const router = Router();
 
@@ -29,16 +29,25 @@ router.get("/", ensureLoggedIn, async (req, res) => {
       total: bills.length,
     };
 
-    // In-app reminders: due now and not yet sent
-    const dueReminders =
-      (await remindersData.getDueRemindersForUserWithDetails(userId)) || [];
+    // Reminders are now shown on the dedicated Reminders page.
+    // Do not sync or surface in-app notifications here to avoid duplication.
+    const dueReminders = [];
+
+    // Show lists of overdue and upcoming bills (with notes and utility info)
+    const overdueBills = await billsData.getBillsHistoryForUser(userId, {
+      status: "overdue",
+    });
+    const upcomingBills = await billsData.getBillsHistoryForUser(userId, {
+      status: "upcoming",
+    });
 
 
     res.render("dashboard", {
       title: "BudgetWise Dashboard",
       budgetSummaries,
       utilitySummary,
-      reminders: dueReminders, // pass to template
+      overdueBills,
+      upcomingBills,
     });
   } catch (error) {
     res.status(500).render("dashboard", {

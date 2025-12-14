@@ -3,14 +3,7 @@ import express from "express";
 import exphbs from "express-handlebars";
 import session from "express-session";
 
-import budgetRoutes from "./routes/budgetRoutes.js";
-import authRoutes from "./routes/authRoutes.js";
-import historyRoutes from "./routes/historyRoutes.js";
-import budgetFeatureRoutes from "./routes/budgets.js";
-import dashboardRoutes from "./routes/dashboardRoutes.js";
-import utilitiesRoutes from "./routes/utilitiesRoutes.js";
-import billsRoutes from "./routes/billRoutes.js";
-import transactionsRoutes from "./routes/transactions.js";
+import indexRoutes from "./routes/index.js";
 
 const app = express();
 const PORT = 3000;
@@ -46,7 +39,7 @@ const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   next();
 };
 
-app.use("/public", express.static("public"));
+app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(rewriteUnsupportedBrowserMethods);
@@ -68,23 +61,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// ROUTES
-app.use("/", budgetRoutes); // home page
-app.use("/", authRoutes); // /login, /signup, /logout
-app.use("/", historyRoutes); // /history
-app.use("/budgets", budgetFeatureRoutes);
-app.use("/dashboard", dashboardRoutes);
-app.use("/utilities", utilitiesRoutes);
-app.use("/bills", billsRoutes);
-
-app.use("/", (req, res, next) => {
-  if (req.session.user && req.path === "/") {
-    return res.redirect("/dashboard");
-  }
-  next();
-});
-
-app.use("/transactions", transactionsRoutes);  //add/edit/delete transactions
+// Use consolidated routes router
+app.use("/", indexRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);

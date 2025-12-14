@@ -58,6 +58,7 @@ export const createUtility = async (
   created.userId = created.userId.toString();
 
   // Only auto-create a bill if the utility is active
+  let autoBill = null;
   if (created.active && created.defaultDay) {
     const now = new Date();
     const dueDate = new Date(
@@ -66,7 +67,7 @@ export const createUtility = async (
       created.defaultDay
     );
 
-    await createBill(
+    autoBill = await createBill(
       created.userId,
       created._id,
       dueDate,
@@ -76,7 +77,7 @@ export const createUtility = async (
     );
   }
 
-  return created;
+  return { utility: created, autoBill };
 };
 
 export const getUtilitiesForUser = async (userId) => {
@@ -217,6 +218,9 @@ export const updateUtility = async (id, updates = {}) => {
       }
     }
   }
+  // Note: we intentionally no longer delete future bills when a utility is
+  // deactivated. Bills represent historical and scheduled items and should
+  // not be removed automatically on deactivation to avoid data loss.
 
   return updatedUtility;
 };
@@ -272,22 +276,9 @@ export const toggleUtilityActive = async (id) => {
     }
   } else {
     // Deactivated - delete future current-month bill; keep past
-    const currentBill = await billsCollection.findOne(
-      {
-        utilityId: new ObjectId(id),
-        dueDate: {
-          $gte: new Date(now.getFullYear(), now.getMonth(), 1),
-          $lt: new Date(now.getFullYear(), now.getMonth() + 1, 1),
-        },
-      },
-      { sort: { dueDate: -1 } }
-    );
-    if (currentBill) {
-      const dueDate = new Date(currentBill.dueDate);
-      if (dueDate > now) {
-        await billsCollection.deleteOne({ _id: currentBill._id });
-      }
-    }
+    // Deactivated - do not delete existing or future bills. We keep bills
+    // as records of scheduled or historical charges even when a utility is
+    // marked inactive to avoid unexpected data loss.
   }
 
   return {

@@ -1,7 +1,7 @@
 // routes/utilities.js
 import { Router } from 'express';
 import dayjs from 'dayjs';
-import { utilitiesData, billsData } from '../data/index.js';
+import { utilitiesData, billsData, remindersData } from '../data/index.js';
 
 const router = Router();
 
@@ -44,45 +44,50 @@ router.get('/create', ensureLoggedIn, (req, res) => {
 
 // Create utility + initial bill
 router.post('/', ensureLoggedIn, async (req, res) => {
+  const isAjax = req.xhr || (req.headers.accept && req.headers.accept.indexOf('application/json') !== -1);
   try {
     const userId = req.session.user._id;
     const { provider, accountNumber, defaultDay, defaultAmount, notes, active } = req.body;
 
-    const utility = await utilitiesData.createUtility(
+    // Always create utilities as active by default
+    const { utility, autoBill } = await utilitiesData.createUtility(
       userId,
       provider,
       accountNumber,
       defaultDay ? parseInt(defaultDay, 10) : null,
       Number(defaultAmount),
       notes,
-      active === 'on'
+      true
     );
 
-    // Build due date for this month
-    const dueDate = dayjs().date(parseInt(defaultDay, 10));
-    const today = dayjs().startOf('day');
+    // If an auto-generated bill was created, also create reminders for it
+    if (autoBill) {
+      try {
+        await remindersData.createBillReminders(userId, autoBill, 3);
+      } catch (remErr) {
+        // don't fail utility creation for reminder issues; log if needed
+        console.error('Failed creating reminders for auto bill:', remErr);
+      }
+    }
 
-    let status = 'upcoming';
-    if (dueDate.isBefore(today)) status = 'overdue';
-    else if (dueDate.isSame(today)) status = 'due';
-
-    await billsData.createBill(
-      userId,
-      utility._id,
-      dueDate.toDate(),
-      Number(defaultAmount),
-      status,
-      notes
-    );
+    // `createUtility` already auto-generates a current-month bill when appropriate.
+    if (isAjax) {
+      return res.json({ success: true, utility });
+    }
 
     res.redirect('/utilities');
   } catch (err) {
+    const errMsg = '⚠️ Could not create utility: ' + err.message;
+    if (isAjax) {
+      return res.status(400).json({ success: false, error: errMsg });
+    }
+
     res.status(400).render('utilities/form', {
       title: 'Add Utility',
       action: '/utilities',
       method: 'POST',
       utility: req.body,
-      error: '⚠️ Could not create utility: ' + err.message
+      error: errMsg
     });
   }
 });
@@ -135,7 +140,14 @@ router.get('/:id/bills', ensureLoggedIn, async (req, res) => {
     const userId = req.session.user._id;
     const utilityId = req.params.id;
 
+    // load utility to determine active status for the UI
+    const utility = await utilitiesData.getUtilityById(utilityId);
+    const utilityActive = Boolean(utility && utility.active);
+
     let bills = await billsData.getBillsForUtility(userId, utilityId);
+
+    // determine earliest bill id so we can hide delete for it
+    const earliestBillId = await billsData.getEarliestBillForUtility(utilityId);
 
     // Add the new mapping logic here
     bills = bills.map(b => {
@@ -162,11 +174,11 @@ router.get('/:id/bills', ensureLoggedIn, async (req, res) => {
               day: 'numeric'
             })
           : '',
-        amountFormatted: (Number(b.amount) || 0).toFixed(2)
+        amountFormatted: (Number(b.amount) || 0).toFixed(2),
+        canDelete: String(b._id) !== String(earliestBillId)
       };
     });
-
-    res.render('bills/list', { title: 'Bills for Utility', bills, utilityId });
+    res.render('bills/list', { title: 'Bills for Utility', bills, utilityId, utilityActive, earliestBillId });
   } catch (err) {
     res.status(500).render('utilities', {
       title: 'Utilities',

@@ -40,40 +40,53 @@ router.get('/', ensureLoggedIn, async (req, res) => {
 router.post('/', ensureLoggedIn, async (req, res) => {
   const userId = req.session.user._id;
   const { category, amountLimit, startDate, endDate } = req.body;
+    const isAjax = req.xhr || (req.headers.accept && req.headers.accept.indexOf('application/json') !== -1);
 
   try {
-    if (!category || !amountLimit || !startDate || !endDate) {
+        if (!category || !amountLimit || !startDate || !endDate) {
+            const errMsg = 'All budget fields (category, amount, dates) are required.';
+            if (isAjax) {
+                return res.status(400).json({ success: false, error: errMsg });
+            }
 
-      const userBudgets = await budgetData.getBudgetsForUser(userId);
-      return res.status(400).render('budget', {
-          title: 'Manage Budgets',
-          budgets: userBudgets,
-          categories: CATEGORY_OPTIONS,
-          error: 'All budget fields (category, amount, dates) are required.'
-       });
-    }
+            const userBudgets = await budgetData.getBudgetsForUser(userId);
+            return res.status(400).render('budget', {
+                    title: 'Manage Budgets',
+                    budgets: userBudgets,
+                    categories: CATEGORY_OPTIONS,
+                    error: errMsg
+             });
+        }
 
-    await budgetData.createBudget({
-        userId,
-        category,
-        amountLimit: Number(amountLimit),
-        startDate,
-        endDate 
-    });
+        const newBudget = await budgetData.createBudget({
+                userId,
+                category,
+                amountLimit: Number(amountLimit),
+                startDate,
+                endDate 
+        });
 
-    return res.redirect('/budgets');
+        if (isAjax) {
+            return res.json({ success: true, budget: newBudget });
+        }
+
+        return res.redirect('/budgets');
 } catch (e) {
     let userBudgets = [];
     try {
         userBudgets = await budgetData.getBudgetsForUser(userId);
     } catch { }
+        const errMsg = e.message || "Could not save the new budget.";
+        if (isAjax) {
+            return res.status(500).json({ success: false, error: errMsg });
+        }
 
-    return res.status(500).render('budget', {
-        title: 'Manage Budgets',
-        budgets: userBudgets,
-        categories: CATEGORY_OPTIONS,
-        error: e.message || "Could not save the new budget."
-      });
+        return res.status(500).render('budget', {
+                title: 'Manage Budgets',
+                budgets: userBudgets,
+                categories: CATEGORY_OPTIONS,
+                error: errMsg
+            });
     } 
 });
 

@@ -124,23 +124,39 @@
   <hr />
 
   <h2>🔔 Reminders</h2>
-  {{#if reminders.length}}
-    <section class="inapp-reminders">
-      <h3>🔔 Notifications</h3>
-      <ul class="reminders-inline">
-        {{#each reminders}}
+  {{!-- Overdue bills with notes --}}
+  <h3>🔴 Overdue Bills</h3>
+  {{#if overdueBills.length}}
+    <section class="overdue-bills">
+      <ul>
+        {{#each overdueBills}}
           <li>
-            {{#if (eq this.type "on")}}📅 Due today{{else}}⏳ Upcoming{{/if}}
-            —
-            {{this.utilityName}}
-            bill of ${{formatMoney this.amount}}
-            ({{formatDate this.reminderDate}})
+            <strong>{{this.utility.provider}}</strong> — ${{formatMoney this.amount}} — Due: {{formatDate this.dueDate}}<br>
+            <em>Notes:</em> {{#if this.notes}}{{this.notes}}{{else}}—{{/if}}
           </li>
         {{/each}}
       </ul>
     </section>
   {{else}}
-    <p>No reminders scheduled.</p>
+    <p>No overdue bills.</p>
   {{/if}}
+
+  {{!-- Upcoming bills with notes --}}
+  <h3>🔔 Upcoming Bills</h3>
+  {{#if upcomingBills.length}}
+    <section class="upcoming-bills">
+      <ul>
+        {{#each upcomingBills}}
+          <li>
+            <strong>{{this.utility.provider}}</strong> — ${{formatMoney this.amount}} — Due: {{formatDate this.dueDate}}<br>
+            <em>Notes:</em> {{#if this.notes}}{{this.notes}}{{else}}—{{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    </section>
+  {{else}}
+    <p>No upcoming bills.</p>
+  {{/if}}
+
 
 </main>

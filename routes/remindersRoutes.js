@@ -15,10 +15,10 @@ router.post("/", ensureLoggedIn, async (req, res) => {
     const { billId, reminderDate, type = "before" } = req.body;
 
     const reminder = await remindersData.createReminder(userId, billId, reminderDate, type);
-    res.redirect("/dashboard"); // or /reminders
+    res.redirect("/reminders");
   } catch (err) {
     console.error("Create reminder error:", err);
-    res.status(500).render("dashboard", { error: "Could not create reminder." });
+    res.status(500).render("reminders", { error: "Could not create reminder." });
   }
 });
 
@@ -26,16 +26,29 @@ router.post("/", ensureLoggedIn, async (req, res) => {
 router.get("/", ensureLoggedIn, async (req, res) => {
   try {
     const userId = req.session.user._id;
-    const reminders = await remindersData.getRemindersForUser(userId);
+    // Ensure reminders are synced for this user's bills, then show due reminders.
+    await remindersData.syncRemindersForUser(userId, 3);
+    const reminders = await remindersData.getDueRemindersForUserWithDetails(userId);
 
     res.render("reminders", {
       title: "Reminders",
-      reminders
+      reminders: reminders || []
     });
   } catch (err) {
     console.error("List reminders error:", err);
     res.status(500).render("reminders", { title: "Reminders", reminders: [], error: "Unable to load reminders." });
   }
+});
+
+// Acknowledge a reminder (mark it as sent)
+router.post('/:id/ack', ensureLoggedIn, async (req, res) => {
+  try {
+    const reminderId = req.params.id;
+    await remindersData.markManySent([reminderId]);
+  } catch (err) {
+    console.error('Acknowledge reminder error:', err);
+  }
+  res.redirect('/reminders');
 });
 
 export default router;

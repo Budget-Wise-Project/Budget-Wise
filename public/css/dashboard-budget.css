@@ -258,6 +258,27 @@ hr {
   color: #333;
 }
 
+/* AJAX form message styles */
+.form-message {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    display: none;
+}
+.form-message.error {
+    background: #ffebee;
+    color: #b71c1c;
+    border: 1px solid #ffcdd2;
+    display: block;
+}
+.form-message.success {
+    background: #e8f5e9;
+    color: #1b5e20;
+    border: 1px solid #c8e6c9;
+    display: block;
+}
+
 .utility-progress-bar {
   display: flex;
   height: 12px;

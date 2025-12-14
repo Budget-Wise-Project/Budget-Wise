@@ -15,6 +15,13 @@
               <button type="submit" class="btn btn-success">Mark as Paid</button>
             </form>
           {{/if}}
+
+          {{!-- Only show delete for bills that are allowed to be deleted --}}
+          {{#if canDelete}}
+            <form action="/bills/{{_id}}/delete" method="POST" style="display:inline; margin-left:8px;">
+              <button type="submit" class="btn btn-danger" data-confirm="Delete this bill?">Delete</button>
+            </form>
+          {{/if}}
         </div>
       {{/each}}
     </section>
@@ -25,18 +32,22 @@
   <hr>
 
 <h2>Add a New Bill</h2>
-<form action="/bills/from-utility/{{utilityId}}" method="POST">
-  <label for="dueDate">Due Date:</label>
-  <input type="date" name="dueDate" required>
+{{#if utilityActive}}
+  <form action="/bills/from-utility/{{utilityId}}" method="POST">
+    <label for="dueDate">Due Date:</label>
+    <input type="date" name="dueDate" required>
 
-  <label for="amount">Amount:</label>
-  <input type="number" step="0.01" name="amount" required>
+    <label for="amount">Amount:</label>
+    <input type="number" step="0.01" name="amount" required>
 
-  <label for="notes">Notes:</label>
-  <input type="text" name="notes">
+    <label for="notes">Notes:</label>
+    <input type="text" name="notes">
 
-  <button type="submit" class="btn btn-primary">Add Bill</button>
-</form>
+    <button type="submit" class="btn btn-primary">Add Bill</button>
+  </form>
+{{else}}
+  <p class="muted">This utility is inactive. You cannot add new bills while it is inactive.</p>
+{{/if}}
 
 
   <p><a href="/utilities">← Back to Utilities</a></p>

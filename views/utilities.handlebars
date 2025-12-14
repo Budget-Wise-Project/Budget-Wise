@@ -12,7 +12,8 @@
   <!-- Utility form -->
   <section class="utility-form">
     <h2>Add a Utility</h2>
-    <form action="/utilities" method="post">
+    <form action="/utilities" method="post" class="utilities-form">
+      <div id="utilities-form-message" class="form-message" aria-live="polite"></div>
       <div class="form-group">
         <label for="provider">Provider</label>
         <input id="provider" name="provider" type="text" required>
@@ -38,12 +39,7 @@
         <textarea id="notes" name="notes"></textarea>
       </div>
 
-      <div class="checkbox-row">
-        <label for="active">
-          <input id="active" type="checkbox" name="active">
-          Active
-        </label>
-      </div>
+      <!-- 'active' is set to true by server; omit checkbox from inline create form -->
 
       <button type="submit" class="btn btn-success">Save Utility</button>
     </form>
@@ -53,7 +49,7 @@
 
   <!-- Utilities list -->
   {{#if utilities.length}}
-    <section class="current-utilities-list">
+    <section id="utilities-list" class="current-utilities-list">
       {{#each utilities}}
         <div class="utility-card">
           <h3>{{provider}}</h3>
@@ -84,7 +80,7 @@
             {{/if}}
 
             <form action="/utilities/{{_id}}/delete" method="post">
-              <button class="btn btn-danger" onclick="return confirm('Delete {{provider}}?')">Delete</button>
+              <button class="btn btn-danger" data-confirm="Delete {{provider}}?">Delete</button>
             </form>
 
             <form action="/utilities/{{_id}}/toggle" method="post">
@@ -97,6 +93,6 @@
       {{/each}}
     </section>
   {{else}}
-    <p>No utilities yet.</p>
+    <p id="no-utilities-placeholder">No utilities yet.</p>
   {{/if}}
 </main>

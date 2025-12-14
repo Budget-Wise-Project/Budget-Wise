@@ -7,6 +7,22 @@ const validateString = (name, value) => {
   }
 };
 
+const computeStatusFromDates = (bill) => {
+  try {
+    if (bill.status && String(bill.status).toLowerCase() === "paid") return "paid";
+    const now = new Date();
+    const todayMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    if (!bill.dueDate) return bill.status || "upcoming";
+    const due = new Date(bill.dueDate);
+    const dueMid = new Date(due.getFullYear(), due.getMonth(), due.getDate());
+    if (dueMid.getTime() < todayMid.getTime()) return "overdue";
+    if (dueMid.getTime() === todayMid.getTime()) return "due";
+    return "upcoming";
+  } catch (e) {
+    return bill.status || "upcoming";
+  }
+};
+
 // History query
 export const getBillsHistoryForUser = async (
   userId,
@@ -51,12 +67,12 @@ export const getBillsHistoryForUser = async (
 
   pipeline.push({ $sort: { dueDate: -1 } });
   const results = await billsCollection.aggregate(pipeline).toArray();
-
   return results.map((bill) => ({
     ...bill,
     _id: bill._id.toString(),
     userId: bill.userId.toString(),
     utilityId: bill.utilityId.toString(),
+    status: computeStatusFromDates(bill),
     utility: {
       ...bill.utility,
       _id: bill.utility._id.toString(),
@@ -75,12 +91,19 @@ export const createBill = async (
   notes = ""
 ) => {
   const billsCollection = await billsCollectionFn();
+  // determine initial status based on dueDate and provided status
+  const tentative = {
+    dueDate,
+    status,
+  };
+  const initialStatus = computeStatusFromDates(tentative);
+
   const newBill = {
     userId: new ObjectId(userId),
     utilityId: new ObjectId(utilityId),
     dueDate: new Date(dueDate),
     amount: typeof amount === "number" ? amount : Number(amount) || 0,
-    status,
+    status: initialStatus,
     paidDate: null,
     notes: notes ? String(notes).trim() : "",
     createdAt: new Date(),
@@ -107,6 +130,7 @@ export const getBillsForUser = async (userId) => {
     _id: b._id.toString(),
     userId: b.userId.toString(),
     utilityId: b.utilityId.toString(),
+    status: computeStatusFromDates(b),
   }));
 };
 
@@ -123,6 +147,7 @@ export const getBillsForUtility = async (userId, utilityId) => {
     _id: b._id.toString(),
     userId: b.userId.toString(),
     utilityId: b.utilityId.toString(),
+    status: computeStatusFromDates(b),
   }));
 };
 
@@ -133,6 +158,7 @@ export const getBillById = async (id) => {
   bill._id = bill._id.toString();
   bill.userId = bill.userId.toString();
   bill.utilityId = bill.utilityId.toString();
+  bill.status = computeStatusFromDates(bill);
   return bill;
 };
 
@@ -218,6 +244,16 @@ export const deleteBillsByUtilityId = async (utilityId) => {
     utilityId: new ObjectId(utilityId),
   });
   return result.deletedCount;
+};
+
+export const getEarliestBillForUtility = async (utilityId) => {
+  const billsCollection = await billsCollectionFn();
+  const bill = await billsCollection.findOne(
+    { utilityId: new ObjectId(utilityId) },
+    { sort: { createdAt: 1 } }
+  );
+  if (!bill) return null;
+  return bill._id.toString();
 };
 
 export default {
