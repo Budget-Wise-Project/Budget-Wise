@@ -153,7 +153,8 @@ export const getBillById = async (id) => {
 export const updateBill = async (id, updates = {}) => {
   const billsCollection = await billsCollectionFn();
   const updateDoc = {};
-  if (updates.dueDate !== undefined) updateDoc.dueDate = new Date(updates.dueDate);
+  if (updates.dueDate !== undefined)
+    updateDoc.dueDate = updates.dueDate ? new Date(updates.dueDate) : null;
   if (updates.amount !== undefined)
     updateDoc.amount =
       typeof updates.amount === 'number' ? updates.amount : Number(updates.amount) || 0;
@@ -162,8 +163,14 @@ export const updateBill = async (id, updates = {}) => {
     updateDoc.paidDate = updates.paidDate ? new Date(updates.paidDate) : null;
   if (updates.notes !== undefined) updateDoc.notes = String(updates.notes).trim();
 
+  // If there is nothing to update, just return the current bill
+  if (Object.keys(updateDoc).length === 0) return getBillById(id);
+
   const result = await billsCollection.updateOne({ _id: new ObjectId(id) }, { $set: updateDoc });
-  if (result.modifiedCount === 0) throw new Error('Could not update bill');
+  // If no document matched, the bill doesn't exist
+  if (result.matchedCount === 0) throw new Error('Bill not found');
+
+  // If matchedCount > 0 but modifiedCount === 0, no fields changed — treat as success
   return getBillById(id);
 };
 
