@@ -62,6 +62,42 @@ main.transaction-page .btn-sm {
   font-size: 0.75rem;
 }
 
+/* Button variants */
+main.transaction-page .btn-primary {
+  background: #1b5e20;
+  color: #fff;
+}
+main.transaction-page .btn-primary:hover {
+  background: #165118;
+}
+
+main.transaction-page .btn-danger {
+  background: #c62828;
+  color: #fff;
+}
+main.transaction-page .btn-danger:hover {
+  background: #9f2020;
+}
+
+main.transaction-page .btn-success {
+  background: #2e7d32;
+  color: #fff;
+}
+main.transaction-page .btn-success:hover {
+  background: #256628;
+}
+
+/* Actions container: spacing and layout for Edit/Delete */
+main.transaction-page .utility-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Make form-contained buttons inherit styling and prevent unexpected form layout shifts */
+main.transaction-page .utility-actions form { margin: 0; }
+main.transaction-page .utility-actions form button { display: inline-block; }
+
 /* Transaction List */
 main.transaction-page .list-group {
   list-style: none;

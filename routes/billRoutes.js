@@ -166,17 +166,23 @@ router.post('/:id', ensureLoggedIn, async (req, res) => {
 
 // Delete bill
 router.post('/:id/delete', ensureLoggedIn, async (req, res) => {
+  let bill = null;
   try {
-    const bill = await billsData.getBillById(req.params.id);
+    bill = await billsData.getBillById(req.params.id);
     const earliest = await billsData.getEarliestBillForUtility(bill.utilityId);
     if (String(earliest) === String(bill._id)) {
       throw new Error('Cannot delete the initial auto-generated bill for this utility');
     }
     await billsData.deleteBill(req.params.id);
-  } catch {
-    // Ignore errors on delete
+  } catch (err) {
+    // Ignore errors on delete but keep bill if available for redirect
+    console.warn('Bill delete warning:', err?.message || err);
   }
-  res.redirect('/bills');
+  // Redirect back to the utility's bills page when possible, otherwise fall back to /bills
+  if (bill && bill.utilityId) {
+    return res.redirect(`/utilities/${bill.utilityId}/bills`);
+  }
+  return res.redirect('/bills');
 });
 
 // Mark bill as paid

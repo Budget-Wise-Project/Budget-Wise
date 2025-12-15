@@ -51,7 +51,7 @@ BudgetWise is a full-stack budgeting app that lets users record expenses, organi
 
    ```
    Email: demo@example.com
-   Password: password123
+   Password: demo12345
    ```
 
    Tips:
