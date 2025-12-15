@@ -29,15 +29,24 @@ router.get("/", ensureLoggedIn, async (req, res) => {
       total: bills.length,
     };
 
-    // Reminders are now shown on the dedicated Reminders page.
-    // Do not sync or surface in-app notifications here to avoid duplication.
     const dueReminders = [];
 
-    // Show lists of overdue and upcoming bills (with notes and utility info)
+    // Show lists of overdue bills and upcoming bills within the next 3 days
     const overdueBills = await billsData.getBillsHistoryForUser(userId, {
       status: "overdue",
     });
+
+    // Compute date window: tomorrow (inclusive) up to 3 days ahead (inclusive)
+    const now = new Date();
+    const todayMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startDate = new Date(todayMid);
+    startDate.setDate(startDate.getDate() + 1); // tomorrow
+    const endDate = new Date(todayMid);
+    endDate.setDate(endDate.getDate() + 4); // exclusive end (day after 3-day window)
+
     const upcomingBills = await billsData.getBillsHistoryForUser(userId, {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
       status: "upcoming",
     });
 

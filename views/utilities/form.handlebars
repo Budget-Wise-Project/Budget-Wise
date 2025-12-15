@@ -31,10 +31,12 @@
         <input id="defaultAmount" name="defaultAmount" type="number" step="0.01" value="{{utility.defaultAmount}}" />
       </div>
 
+      {{#if utility._id}}
       <div class="form-group form-group-notes">
         <label for="notes">Notes</label>
         <textarea id="notes" name="notes">{{utility.notes}}</textarea>
       </div>
+      {{/if}}
 
       {{#if utility._id}}
       <div class="checkbox-row">

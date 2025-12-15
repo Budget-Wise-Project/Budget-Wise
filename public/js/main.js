@@ -251,3 +251,38 @@ document.addEventListener('submit', async (e) => {
     }
   }
 });
+
+// Polyfill/fallback for <input type="month"> on browsers that don't support it.
+(() => {
+  const test = document.createElement('input');
+  test.setAttribute('type', 'month');
+  const supportsMonth = test.type === 'month';
+  if (supportsMonth) return;
+
+  // Convert any month inputs to text with pattern YYYY-MM and add a small
+  // client-side validator on the history filter form.
+  document.addEventListener('DOMContentLoaded', () => {
+    const monthInputs = document.querySelectorAll('input[type="month"]');
+    monthInputs.forEach((inp) => {
+      inp.type = 'text';
+      if (!inp.getAttribute('placeholder')) inp.setAttribute('placeholder', 'YYYY-MM');
+      if (!inp.getAttribute('pattern')) inp.setAttribute('pattern', '\\d{4}-\\d{2}');
+      inp.setAttribute('inputmode', 'numeric');
+    });
+
+    const historyForm = document.querySelector('.history-filter-form');
+    if (historyForm) {
+      historyForm.addEventListener('submit', (e) => {
+        const m = document.getElementById('month');
+        if (m && m.value) {
+          const re = /^\d{4}-\d{2}$/;
+          if (!re.test(m.value)) {
+            e.preventDefault();
+            alert('Please enter month as YYYY-MM (e.g. 2025-12)');
+            m.focus();
+          }
+        }
+      });
+    }
+  });
+})();

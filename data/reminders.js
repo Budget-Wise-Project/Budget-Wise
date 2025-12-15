@@ -73,9 +73,24 @@ export const createBillReminders = async (userId, bill, daysBefore = 3) => {
   }
 
   if (reminders.length > 0) {
-    await col.insertMany(reminders);
+    // Deduplicate generated reminders by (type + date) to avoid accidental
+    // double-inserts when dates normalize to the same midnight or when
+    // createBillReminders is invoked more than once in a request flow.
+    const seen = new Set();
+    const unique = [];
+    for (const r of reminders) {
+      const key = `${r.type}:${new Date(r.reminderDate).getTime()}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      unique.push(r);
+    }
+    if (unique.length > 0) {
+      await col.insertMany(unique);
+    }
+    // return the actual reminders that were inserted (unique set)
+    return unique;
   }
-  return reminders;
+  return [];
 };
 
 export const getDueRemindersForUserWithDetails = async (userId) => {

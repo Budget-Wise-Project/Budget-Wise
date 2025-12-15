@@ -26,7 +26,6 @@ router.post("/", ensureLoggedIn, async (req, res) => {
 router.get("/", ensureLoggedIn, async (req, res) => {
   try {
     const userId = req.session.user._id;
-    // Ensure reminders are synced for this user's bills, then show due reminders.
     await remindersData.syncRemindersForUser(userId, 3);
     const reminders = await remindersData.getDueRemindersForUserWithDetails(userId);
 

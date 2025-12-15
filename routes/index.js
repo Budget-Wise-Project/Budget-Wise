@@ -35,7 +35,6 @@ router.use("/bills", billsRoutes);
 // Transactions feature
 router.use("/transactions", transactionsRoutes); // transactions pages
 
-// Reminders feature
 router.use("/reminders", remindersRoutes);
 
 //404 handler (no path so it acts as a catch-all middleware)

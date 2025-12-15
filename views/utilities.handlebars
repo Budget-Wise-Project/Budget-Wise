@@ -2,7 +2,7 @@
 <main class="page-content utilities-page">
   <section class="header-section">
     <h1>Manage Your Utilities</h1>
-    <p>Track providers, default day of month, amounts, and notes.</p>
+    <p>Track providers, default day of month, and amounts.</p>
   </section>
 
   {{#if error}}
@@ -34,10 +34,7 @@
         <input id="defaultAmount" name="defaultAmount" type="number" step="0.01">
       </div>
 
-      <div class="form-group">
-        <label for="notes">Notes</label>
-        <textarea id="notes" name="notes"></textarea>
-      </div>
+      
 
       <!-- 'active' is set to true by server; omit checkbox from inline create form -->
 

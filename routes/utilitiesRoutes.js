@@ -47,16 +47,16 @@ router.post('/', ensureLoggedIn, async (req, res) => {
   const isAjax = req.xhr || (req.headers.accept && req.headers.accept.indexOf('application/json') !== -1);
   try {
     const userId = req.session.user._id;
-    const { provider, accountNumber, defaultDay, defaultAmount, notes, active } = req.body;
+    const { provider, accountNumber, defaultDay, defaultAmount } = req.body;
 
-    // Always create utilities as active by default
+    // Always create utilities as active by default; ignore any 'notes' provided from the add-utility UI.
     const { utility, autoBill } = await utilitiesData.createUtility(
       userId,
       provider,
       accountNumber,
       defaultDay ? parseInt(defaultDay, 10) : null,
       Number(defaultAmount),
-      notes,
+      "",
       true
     );
 
