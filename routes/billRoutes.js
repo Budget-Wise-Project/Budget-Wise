@@ -2,6 +2,7 @@
 import { Router } from "express";
 import dayjs from "dayjs";
 import { billsData, utilitiesData, remindersData } from "../data/index.js";
+import transactionsData from "../data/transactions.js";
 
 const router = Router();
 
@@ -188,16 +189,40 @@ router.post("/:id/delete", ensureLoggedIn, async (req, res) => {
 // Mark bill as paid
 router.post("/:id/mark-paid", ensureLoggedIn, async (req, res) => {
   try {
+    const userId = req.session.user._id;
     const bill = await billsData.getBillById(req.params.id);
+
+    const alreadyPaid = String(bill.status || "").toLowerCase() === "paid";
+    if (alreadyPaid) return res.redirect(`/utilities/${bill.utilityId}/bills`);
+
     await billsData.updateBill(req.params.id, {
       status: "paid",
       paidDate: new Date(),
     });
+
+    const name =
+      (req.session.user.firstName && req.session.user.lastName)
+        ? `${req.session.user.firstName} ${req.session.user.lastName}`
+        : (req.session.user.name || "Unknown");
+
+    await transactionsData.addTransaction(
+      userId,
+      name,
+      `Paid bill`,
+      Number(bill.amount),
+      "Utilities",     
+      "Expense",
+      new Date(),      
+      bill.notes || ""
+    );
+
+    // reminders
     try {
       await remindersData.markRemindersForBillSent(req.params.id);
     } catch (remErr) {
-      console.error('Failed to mark reminders sent for bill:', remErr);
+      console.error("Failed to mark reminders sent for bill:", remErr);
     }
+
     res.redirect(`/utilities/${bill.utilityId}/bills`);
   } catch (err) {
     console.error(err);
@@ -225,10 +250,12 @@ router.get("/:id/bills", ensureLoggedIn, async (req, res) => {
       const todayMidnight = new Date(today.setHours(0, 0, 0, 0));
       const dueMidnight = new Date(new Date(b.dueDate).setHours(0, 0, 0, 0));
 
-      let status = "upcoming";
-      if (dueMidnight < todayMidnight) status = "overdue";
-      else if (dueMidnight.getTime() === todayMidnight.getTime())
-        status = "due";
+      let status = String(b.status || "").toLowerCase() === "paid" ? "paid" : "upcoming";
+
+      if (status !== "paid") {
+        if (dueMidnight < todayMidnight) status = "overdue";
+        else if (dueMidnight.getTime() === todayMidnight.getTime()) status = "due";
+      }
 
       return {
         ...b,
