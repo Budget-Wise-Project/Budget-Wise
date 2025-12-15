@@ -13,7 +13,15 @@
 <body>
   <header>
     <div class="logo-placeholder">
-      <img src="/images/BudgetWiseLogo.png" alt="BudgetWise Logo" class="logo-img" />
+      {{#if user}}
+        <a href="/dashboard" aria-label="Go to Dashboard">
+          <img src="/images/BudgetWiseLogo.png" alt="BudgetWise Logo" class="logo-img" />
+        </a>
+      {{else}}
+        <a href="/" aria-label="Go to Home">
+          <img src="/images/BudgetWiseLogo.png" alt="BudgetWise Logo" class="logo-img" />
+        </a>
+      {{/if}}
     </div>
     <nav class="main-nav">
       <a href="/dashboard">Home</a>
