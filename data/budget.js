@@ -48,7 +48,7 @@ const validateCategory = (category, varName) => {
 
 //Core Feature
 //Create a new budget document with category and date limits
-export const createBudget = async ({ userId, category, amountLimit, startDate, endDate, active}) => {
+export const createBudget = async ({ userId, category, amountLimit, startDate, endDate}) => {
     userId = validateId(userId, 'userId');
     category = validateCategory(category, 'category');
     amountLimit = validateNonNegativeNumber(amountLimit, 'amountLimit');
@@ -150,7 +150,12 @@ export const calculateBudgetSummary = async (budgetDocument) => {
                     $gte: start,
                     $lte: end
                 },
-                ...(category && { category: category })
+                ...(category && {
+                    category: { 
+                        $regex: `^${category.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, 
+                        $options: "i" 
+                    }
+                })
             }
         },
         {
