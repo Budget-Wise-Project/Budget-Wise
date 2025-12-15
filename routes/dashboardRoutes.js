@@ -16,7 +16,7 @@ router.get("/", ensureLoggedIn, async (req, res) => {
     // Budgets
     const rawBudgets = await budgetData.getBudgetsForUser(userId);
 
-    const activeBudgets = rawBudgets.filter((b) => b.active !== false);
+    const activeBudgets = rawBudgets.filter((b) => b.active !== true);
 
     //Show only active budgets
     const budgetSummaries = await Promise.all(

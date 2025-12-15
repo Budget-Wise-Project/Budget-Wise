@@ -1,8 +1,7 @@
 <main class="dashboard-page">
   <section class="header-section">
     <h1 class="page-title">BudgetWise Dashboard</h1>
-    <p class="description">Your central hub for budget tracking and bill
-      management.</p>
+    <p class="description">Your central hub for budget tracking and bill management.</p>
   </section>
 
   {{#if error}}
@@ -21,7 +20,9 @@
         <section class="budget-tracking-list">
             {{#each budgetSummaries}}
                 <div class="budget-card">
-                    <h3>{{this.category}} Budget ({{formatDate this.startDate}} - {{formatDate this.endDate}})</h3>
+                    <h3>
+                        {{this.category}} Budget ({{formatDate this.startDate}} - {{formatDate this.endDate}})
+                    </h3>
 
                     <div class="tracking-stats">
                         <p><strong>Limit:</strong> ${{this.amountLimitFormatted}}</p>
@@ -37,45 +38,52 @@
                         ></div>
                     </div>
 
-                <p class="percentage-used-text">
-                    {{this.percentageUsedRounded}}% of budget used
-                </p>
-            </div>
-        {{/each}}
-    </section>
-  {{else}}
-    <p>You have no active budgets being tracked. Please <a href="/budgets">set one up</a>!</p>
-  {{/if}}
-  <hr />
+                    <p class="percentage-used-text">
+                        {{this.percentageUsedRounded}}% of budget used
+                    </p>
+                </div>
+            {{/each}}
+        </section>
+    {{else}}
+        <p>
+            You have no active budgets being tracked. Please <a href="/budgets">set one up</a>!
+        </p>
+    {{/if}}
 
-  <h2>📌 Upcoming Bills & Utilities</h2>
-  {{#if utilitySummary}}
-    <section class="utility-summary-card">
-      <h3>Utility Bill Status Overview</h3>
-      <div class="utility-summary-stats">
-        <div class="summary-item">
-          <span class="status-badge status-paid">Paid</span>
-          <span class="summary-count">{{utilitySummary.paid}}</span>
+    <hr />
+
+    <h2>📌 Upcoming Bills & Utilities</h2>
+    {{#if utilitySummary}}
+      <section class="utility-summary-card">
+        <h3>Utility Bill Status Overview</h3>
+
+        <div class="utility-summary-stats">
+            <div class="summary-item">
+            <span class="status-badge status-paid">Paid</span>
+            <span class="summary-count">{{utilitySummary.paid}}</span>
         </div>
+
         <div class="summary-item">
           <span class="status-badge status-due">Due Today</span>
           <span class="summary-count">{{utilitySummary.due}}</span>
         </div>
+
         <div class="summary-item">
           <span class="status-badge status-upcoming">Upcoming</span>
           <span class="summary-count">{{utilitySummary.upcoming}}</span>
         </div>
+
         <div class="summary-item">
           <span class="status-badge status-overdue">Overdue</span>
           <span class="summary-count">{{utilitySummary.overdue}}</span>
         </div>
-        <div class="summary-item total">
-          <strong>Total Bills:</strong>
-          {{utilitySummary.total}}
-        </div>
-      </div>
 
-      <div class="utility-progress-bar">
+        <div class="summary-item total">
+          <strong>Total Bills:</strong> {{utilitySummary.total}}
+        </div>
+    </div>
+
+    <div class="utility-progress-bar">
         <div
           class="utility-progress-paid"
           style="width: {{calcPercent
