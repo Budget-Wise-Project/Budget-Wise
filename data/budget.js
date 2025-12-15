@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { budgets, transactions } from '../config/mongoCollections.js';
 
-//To validate ObjectId strings
+//Validate ObjectId strings
 const validateId = (id, varName) => {
   if (!id) throw new Error(`${varName} is required`);
   if (typeof id !== 'string') throw new Error(`${varName} must be a string`);
@@ -46,8 +46,6 @@ const validateCategory = (category, varName) => {
   return category;
 };
 
-//Core Feature
-//Create a new budget document with category and date limits
 export const createBudget = async ({ userId, category, amountLimit, startDate, endDate }) => {
   userId = validateId(userId, 'userId');
   category = validateCategory(category, 'category');

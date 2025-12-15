@@ -5,15 +5,12 @@ import { billsData, utilitiesData } from './index.js';
 
 export const createBillReminders = async (userId, bill, daysBefore = 3) => {
   const col = await remindersCollectionFn();
-  // Normalize input and prevent duplicate reminder creation for the same bill.
-  // Remove any existing reminders for this bill before creating new ones.
   if (!bill || !bill._id) throw new Error('Bill is required');
   await col.deleteMany({ billId: new ObjectId(bill._id) });
 
   const reminders = [];
 
   const due = new Date(bill.dueDate);
-  // normalize reminder dates to midnight (server local)
   const normalizeToMidnight = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
   const now = new Date();
   const today = normalizeToMidnight(now);
@@ -73,9 +70,6 @@ export const createBillReminders = async (userId, bill, daysBefore = 3) => {
   }
 
   if (reminders.length > 0) {
-    // Deduplicate generated reminders by (type + date) to avoid accidental
-    // double-inserts when dates normalize to the same midnight or when
-    // createBillReminders is invoked more than once in a request flow.
     const seen = new Set();
     const unique = [];
     for (const r of reminders) {
@@ -87,7 +81,6 @@ export const createBillReminders = async (userId, bill, daysBefore = 3) => {
     if (unique.length > 0) {
       await col.insertMany(unique);
     }
-    // return the actual reminders that were inserted (unique set)
     return unique;
   }
   return [];
@@ -106,7 +99,7 @@ export const getDueRemindersForUserWithDetails = async (userId) => {
     .sort({ reminderDate: 1 })
     .toArray();
 
-  // Attach bill + utility details
+  // Attach bill & utility details
   const enriched = [];
   for (const r of reminders) {
     try {
@@ -121,8 +114,6 @@ export const getDueRemindersForUserWithDetails = async (userId) => {
         amount: bill?.amount || 0,
       });
     } catch (err) {
-      // Skip reminders whose bill or utility cannot be loaded (stale reminders)
-      // Optionally we could remove them from DB here, but for safety just ignore.
       continue;
     }
   }
@@ -231,7 +222,6 @@ export const syncRemindersForUser = async (userId, daysBefore = 3) => {
         await createBillReminders(userId, b, daysBefore);
       }
     } catch (err) {
-      // skip problematic bills
       console.error('Error syncing reminders for bill', b._id, err);
       continue;
     }

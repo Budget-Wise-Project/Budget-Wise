@@ -23,10 +23,8 @@ let getAllTransactions = async function (userId) {
 
   const trans = await transactions();
   let all = await trans.find({ userId: userId }).toArray();
-  // Normalize dates and add formatted fields for UI
   return all.map((t) => {
     const out = { ...t };
-    // ensure date is a Date object
     let dt = out.date;
     if (!dt) dt = new Date();
     else if (typeof dt === 'string') dt = new Date(dt);
@@ -36,8 +34,7 @@ let getAllTransactions = async function (userId) {
     const mm = String(dt.getMonth() + 1).padStart(2, '0');
     const yyyy = dt.getFullYear();
 
-    out.dateFormatted = `${mm}/${dd}/${yyyy}`; // for display in lists (MM/DD/YYYY)
-    // for input[type=date] value (YYYY-MM-DD)
+    out.dateFormatted = `${mm}/${dd}/${yyyy}`;
     out.dateForInput = `${yyyy}-${mm}-${dd}`;
     out.isIncome = String(out.type).toLowerCase() === 'income';
 
@@ -51,13 +48,11 @@ let addTransaction = async function (userId, name, title, amount, category, type
 
   const trans = await transactions();
 
-  // normalize date -> store as Date object
   let parsedDate;
   if (!date) parsedDate = new Date();
   else if (date instanceof Date) parsedDate = date;
   else parsedDate = new Date(String(date).trim());
 
-  // prevent future dates
   const normalizeToMidnight = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
   const todayMid = normalizeToMidnight(new Date());
   const parsedMid = normalizeToMidnight(parsedDate);
@@ -89,7 +84,6 @@ let getTransactionById = async function (id, userId) {
   let transaction = await trans.findOne({ _id: id, userId: userId });
   if (!transaction) throw new Error('Transaction not found');
 
-  // normalize and add formatted fields
   let dt = transaction.date;
   if (!dt) dt = new Date();
   else if (typeof dt === 'string') dt = new Date(dt);
@@ -112,7 +106,6 @@ let updateTransaction = async function (id, userId, updated) {
 
   const trans = await transactions();
 
-  // Defensive parsing: coerce and validate incoming fields
   const title = updated.title !== undefined ? String(updated.title).trim() : null;
   const amount = updated.amount !== undefined ? Number(updated.amount) : null;
   const category = updated.category !== undefined ? String(updated.category).trim() : null;
@@ -155,7 +148,6 @@ let updateTransaction = async function (id, userId, updated) {
     throw new Error('Could not update - transaction not found or you do not have permission');
   }
 
-  // Return the updated document
   return await getTransactionById(id, userId);
 };
 

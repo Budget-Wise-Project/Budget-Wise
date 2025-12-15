@@ -43,7 +43,6 @@ router.get('/', ensureLoggedIn, async (req, res) => {
   }
 });
 
-// Acknowledge a reminder (mark it as sent)
 router.post('/:id/ack', ensureLoggedIn, async (req, res) => {
   try {
     const reminderId = req.params.id;

@@ -32,13 +32,12 @@ router.get('/', ensureLoggedIn, async (req, res) => {
       status: 'overdue',
     });
 
-    // Compute date window: tomorrow (inclusive) up to 3 days ahead (inclusive)
     const now = new Date();
     const todayMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const startDate = new Date(todayMid);
-    startDate.setDate(startDate.getDate() + 1); // tomorrow
+    startDate.setDate(startDate.getDate() + 1);
     const endDate = new Date(todayMid);
-    endDate.setDate(endDate.getDate() + 4); // exclusive end (day after 3-day window)
+    endDate.setDate(endDate.getDate() + 4);
 
     const upcomingBills = await billsData.getBillsHistoryForUser(userId, {
       startDate: startDate.toISOString(),

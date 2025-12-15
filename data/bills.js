@@ -81,7 +81,6 @@ export const createBill = async (
   notes = ''
 ) => {
   const billsCollection = await billsCollectionFn();
-  // determine initial status based on dueDate and provided status
   const tentative = {
     dueDate,
     status,

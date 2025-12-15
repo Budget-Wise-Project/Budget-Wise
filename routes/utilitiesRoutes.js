@@ -41,7 +41,7 @@ router.get('/create', ensureLoggedIn, (req, res) => {
   });
 });
 
-// Create utility + initial bill
+// Create utility + auto-generate current bill if applicable
 router.post('/', ensureLoggedIn, async (req, res) => {
   const isAjax =
     req.xhr || (req.headers.accept && req.headers.accept.indexOf('application/json') !== -1);
@@ -49,7 +49,6 @@ router.post('/', ensureLoggedIn, async (req, res) => {
     const userId = req.session.user._id;
     const { provider, accountNumber, defaultDay, defaultAmount } = req.body;
 
-    // Always create utilities as active by default; ignore any 'notes' provided from the add-utility UI.
     const { utility, autoBill } = await utilitiesData.createUtility(
       userId,
       provider,
@@ -60,17 +59,14 @@ router.post('/', ensureLoggedIn, async (req, res) => {
       true
     );
 
-    // If an auto-generated bill was created, also create reminders for it
     if (autoBill) {
       try {
         await remindersData.createBillReminders(userId, autoBill, 3);
       } catch (remErr) {
-        // don't fail utility creation for reminder issues; log if needed
         console.error('Failed creating reminders for auto bill:', remErr);
       }
     }
 
-    // `createUtility` already auto-generates a current-month bill when appropriate.
     if (isAjax) {
       return res.json({ success: true, utility });
     }
@@ -107,7 +103,6 @@ router.get('/:id/edit', ensureLoggedIn, async (req, res) => {
   }
 });
 
-// Update utility + sync current bill
 router.post('/:id', ensureLoggedIn, async (req, res) => {
   try {
     const updates = {
@@ -134,22 +129,18 @@ router.post('/:id', ensureLoggedIn, async (req, res) => {
   }
 });
 
-// ===== View bills for a utility =====
 router.get('/:id/bills', ensureLoggedIn, async (req, res) => {
   try {
     const userId = req.session.user._id;
     const utilityId = req.params.id;
 
-    // load utility to determine active status for the UI
     const utility = await utilitiesData.getUtilityById(utilityId);
     const utilityActive = Boolean(utility && utility.active);
 
     let bills = await billsData.getBillsForUtility(userId, utilityId);
 
-    // determine earliest bill id so we can hide delete for it
     const earliestBillId = await billsData.getEarliestBillForUtility(utilityId);
 
-    // Add the new mapping logic here
     bills = bills.map((b) => {
       let status = b.status; // keep DB status if it's "paid"
 
@@ -194,15 +185,10 @@ router.get('/:id/bills', ensureLoggedIn, async (req, res) => {
   }
 });
 
-// Delete utility + its bills
 router.post('/:id/delete', ensureLoggedIn, async (req, res) => {
   try {
     const utilityId = req.params.id;
-
-    // delete the utility
     await utilitiesData.deleteUtility(utilityId);
-
-    // delete all bills linked to this utility
     await billsData.deleteBillsByUtilityId(utilityId);
   } catch (err) {
     console.error('Error deleting utility and bills:', err);
@@ -210,7 +196,6 @@ router.post('/:id/delete', ensureLoggedIn, async (req, res) => {
   res.redirect('/utilities');
 });
 
-// Toggle active
 router.post('/:id/toggle', ensureLoggedIn, async (req, res) => {
   try {
     await utilitiesData.toggleUtilityActive(req.params.id);

@@ -134,7 +134,6 @@ export const updateUtility = async (id, updates = {}) => {
 
   const updatedUtility = await getUtilityById(id);
 
-  // Sync current month’s bill if due date or amount changed
   if (updates.defaultDay !== undefined || updates.defaultAmount !== undefined) {
     const now = new Date();
     const dueDate = updates.defaultDay
@@ -155,7 +154,6 @@ export const updateUtility = async (id, updates = {}) => {
     }
   }
 
-  // If active toggled on: ensure a bill exists for current month
   if (updateDoc.active === true) {
     const billsCollection = await billsCollectionFn();
     const now = new Date();
@@ -181,7 +179,6 @@ export const updateUtility = async (id, updates = {}) => {
     }
   }
 
-  // If active toggled off: delete future bill for current month, keep past
   if (updateDoc.active === false) {
     const billsCollection = await billsCollectionFn();
     const now = new Date();
@@ -202,9 +199,6 @@ export const updateUtility = async (id, updates = {}) => {
       }
     }
   }
-  // Note: we intentionally no longer delete future bills when a utility is
-  // deactivated. Bills represent historical and scheduled items and should
-  // not be removed automatically on deactivation to avoid data loss.
 
   return updatedUtility;
 };
@@ -252,10 +246,7 @@ export const toggleUtilityActive = async (id) => {
       }
     }
   } else {
-    // Deactivated - delete future current-month bill; keep past
-    // Deactivated - do not delete existing or future bills. We keep bills
-    // as records of scheduled or historical charges even when a utility is
-    // marked inactive to avoid unexpected data loss.
+    throw new Error('Deactivating utilities is not supported at this time');
   }
 
   return {

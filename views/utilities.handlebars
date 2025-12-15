@@ -1,4 +1,3 @@
-<!-- views/utilities/index.handlebars -->
 <main class='page-content utilities-page'>
   <section class='header-section'>
     <h1>Manage Your Utilities</h1>
@@ -9,7 +8,6 @@
     <div class='error-banner'>⚠️ {{error}}</div>
   {{/if}}
 
-  <!-- Utility form -->
   <section class='utility-form'>
     <h2>Add a Utility</h2>
     <form action='/utilities' method='post' class='utilities-form'>
@@ -34,15 +32,12 @@
         <input id='defaultAmount' name='defaultAmount' type='number' step='0.01' />
       </div>
 
-      <!-- 'active' is set to true by server; omit checkbox from inline create form -->
-
       <button type='submit' class='btn btn-success'>Save Utility</button>
     </form>
   </section>
 
   <hr />
 
-  <!-- Utilities list -->
   {{#if utilities.length}}
     <section id='utilities-list' class='current-utilities-list'>
       {{#each utilities}}

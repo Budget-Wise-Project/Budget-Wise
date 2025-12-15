@@ -8,7 +8,7 @@
     "start": "node app.js",
     "seed": "node scripts/db_seed.js",
     "lint": "eslint . --ext .js --fix",
-    "format": "prettier --write \"**/*.js\" && echo \"To format .handlebars templates install a Handlebars Prettier plugin (see README)\""
+    "format": "prettier --write \"**/*.js\" && echo \"Formatted all JS files with Prettier.\""
   },
   "module": "node --trace-warnings",
   "type": "module",

@@ -1,5 +1,3 @@
-// Routes for managing the transactions
-
 import { Router } from 'express';
 import transactionsData from '../data/transactions.js';
 
@@ -81,8 +79,6 @@ router.post('/edit/:id', async (req, res) => {
       notes,
     });
 
-    // transaction updated successfully
-    // If the client expects JSON (AJAX), return a JSON success response.
     const acceptsJson = req.get('accept') && req.get('accept').includes('application/json');
     if (acceptsJson || req.xhr) {
       return res.json({ success: true });
